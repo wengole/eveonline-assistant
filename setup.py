@@ -14,7 +14,7 @@ import django_eve_mon
 version = django_eve_mon.__version__
 
 setup(
-    name='project_name is the title of the project.',
+    name='django_eve_mon',
     version=version,
     author='',
     author_email='wengole@gmail.com',

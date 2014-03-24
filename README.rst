@@ -1,5 +1,5 @@
-project_name is the title of the project.
-==============================
+django_eve_mon
+==============
 
 Web based skill planner for EVE Online
 
@@ -7,11 +7,11 @@ Web based skill planner for EVE Online
 LICENSE: BSD
 
 Settings
-------------
+--------
 
-project_name is the title of the project. relies extensively on environment settings which **will not work with Apache/mod_wsgi setups**. It has been deployed successfully with both Gunicorn/Nginx and even uWSGI/Nginx.
+django_eve_mon relies extensively on environment settings which **will not work with Apache/mod_wsgi setups**. It has been deployed successfully with both Gunicorn/Nginx and even uWSGI/Nginx.
 
-For configuration purposes, the following table maps the 'project_name is the title of the project.' environment variables to their Django setting:
+For configuration purposes, the following table maps the 'django_eve_mon' environment variables to their Django setting:
 
 ======================================= =========================== ============================================== ===========================================
 Environment Variable                    Django Setting              Development Default                            Production Default

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Django settings for project_name is the title of the project. project.
+Django settings for django_eve_mon project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -365,12 +365,12 @@ class Production(Common):
 
     ########## EMAIL
     DEFAULT_FROM_EMAIL = values.Value(
-            'project_name is the title of the project. <project_name is the title of the project.-noreply@example.com>')
+            'django_eve_mon <django_eve_mon-noreply@example.com>')
     EMAIL_HOST = values.Value('smtp.sendgrid.com')
     EMAIL_HOST_PASSWORD = values.SecretValue(environ_prefix="", environ_name="SENDGRID_PASSWORD")
     EMAIL_HOST_USER = values.SecretValue(environ_prefix="", environ_name="SENDGRID_USERNAME")
     EMAIL_PORT = values.IntegerValue(587, environ_prefix="", environ_name="EMAIL_PORT")
-    EMAIL_SUBJECT_PREFIX = values.Value('[project_name is the title of the project.] ', environ_name="EMAIL_SUBJECT_PREFIX")
+    EMAIL_SUBJECT_PREFIX = values.Value('[django_eve_mon] ', environ_name="EMAIL_SUBJECT_PREFIX")
     EMAIL_USE_TLS = True
     SERVER_EMAIL = EMAIL_HOST_USER
     ########## END EMAIL

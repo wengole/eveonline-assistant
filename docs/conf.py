@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# project_name is the title of the project. documentation build configuration file, created by
+# django_eve_mon documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'project_name is the title of the project.'
+project = u'django_eve_mon'
 copyright = u'2014, Ben Cole'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -183,7 +183,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'django_eve_mon.tex', u'project_name is the title of the project. Documentation',
+  ('index', 'django_eve_mon.tex', u'django_eve_mon Documentation',
    u'Ben Cole', 'manual'),
 ]
 
@@ -213,7 +213,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'django_eve_mon', u'project_name is the title of the project. Documentation',
+    ('index', 'django_eve_mon', u'django_eve_mon Documentation',
      [u'Ben Cole'], 1)
 ]
 
@@ -227,8 +227,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'django_eve_mon', u'project_name is the title of the project. Documentation',
-   u'Ben Cole', 'project_name is the title of the project.',
+  ('index', 'django_eve_mon', u'django_eve_mon Documentation',
+   u'Ben Cole', 'django_eve_mon',
    'Web based skill planner for EVE Online','Miscellaneous'),
 ]
 

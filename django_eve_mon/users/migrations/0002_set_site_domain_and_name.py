@@ -13,7 +13,7 @@ class Migration(DataMigration):
         Site = orm['sites.Site']
         site = Site.objects.get(id=settings.SITE_ID)
         site.domain = "example.com"
-        site.name = "project_name is the title of the project."
+        site.name = "django_eve_mon"
         site.save()
 
     def backwards(self, orm):
