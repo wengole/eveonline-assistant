@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath="$PWD/django_eve_mon" config.wsgi:application
