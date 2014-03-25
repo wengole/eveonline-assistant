@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .django_eve_mon.skills.models import Group, Skill, Attribute
+from .models import Group, Skill, Attribute
 
 
 class GroupAdmin(admin.ModelAdmin):
@@ -18,8 +18,8 @@ class SkillAdmin(admin.ModelAdmin):
         'name',
         'rank',
         'description',
-        'attribute',
-        'attribute'
+        'primary_attribute',
+        'secondary_attribute'
     )
     list_filter = ()
     search_fields = ()

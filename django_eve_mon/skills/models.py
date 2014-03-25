@@ -28,12 +28,14 @@ class Skill(models.Model):
     primary_attribute = models.ForeignKey(
         "Attribute",
         verbose_name="Attribute",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="primary_for"
     )
     secondary_attribute = models.ForeignKey(
         "Attribute",
         verbose_name="Attribute",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="secondary_for"
     )
 
     def __unicode__(self):
