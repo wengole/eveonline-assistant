@@ -36,3 +36,4 @@ django-avatar==2.0
 
 # Your custom requirements go here
 django-suit==0.2.7
+evelink==0.3.1

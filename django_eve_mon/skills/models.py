@@ -21,19 +21,19 @@ class Skill(models.Model):
     rank = models.IntegerField("Rank")
     description = models.TextField("Description")
     required_skills = models.ManyToManyField(
-        "self",
+        "Requirement",
         verbose_name="Required skills",
         related_name="provided_skills"
     )
     primary_attribute = models.ForeignKey(
         "Attribute",
-        verbose_name="Attribute",
+        verbose_name="Primary Attribute",
         on_delete=models.CASCADE,
         related_name="primary_for"
     )
     secondary_attribute = models.ForeignKey(
         "Attribute",
-        verbose_name="Attribute",
+        verbose_name="Secondary Attribute",
         on_delete=models.CASCADE,
         related_name="secondary_for"
     )
@@ -42,8 +42,19 @@ class Skill(models.Model):
         return self.name
 
 
+class Requirement(models.Model):
+    skill = models.ForeignKey(
+        "Skill",
+        verbose_name="Skill",
+        on_delete=models.CASCADE
+    )
+    level = models.IntegerField("Level")
+
+    def __unicode__(self):
+        return u"%s L%s" % (self.skill, self.level)
+
+
 class Attribute(models.Model):
-    id = models.IntegerField("Id", primary_key=True)
     name = models.CharField("Name", max_length=255)
 
     def __unicode__(self):
