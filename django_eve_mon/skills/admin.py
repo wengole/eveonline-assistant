@@ -11,7 +11,16 @@ class GroupAdmin(admin.ModelAdmin):
 
 
 class SkillAdmin(admin.ModelAdmin):
-    list_display = ('id', 'published', 'group', 'name', 'rank', 'description', 'attribute', 'attribute')
+    list_display = (
+        'id',
+        'published',
+        'group',
+        'name',
+        'rank',
+        'description',
+        'primary_attribute',
+        'secondary_attribute'
+    )
     list_filter = ()
     search_fields = ()
     date_hierarchy = ''
