@@ -16,6 +16,7 @@ from os.path import join
 # See: http://django-storages.readthedocs.org/en/latest/backends/amazon-S3.html#settings
 try:
     from S3 import CallingFormat
+
     AWS_CALLING_FORMAT = CallingFormat.SUBDOMAIN
 except ImportError:
     # TODO: Fix this where even if in Dev this class is called.
@@ -27,7 +28,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 class Common(Configuration):
-
     ########## APP CONFIGURATION
     DJANGO_APPS = (
         # Default Django apps:
@@ -126,9 +126,9 @@ class Common(Configuration):
     # Do this here because thanks to django-pylibmc-sasl and pylibmc memcacheify is painful to install on windows.
     # memcacheify is what's used in Production
     CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': ''
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': ''
         }
     }
     ########## END CACHING
@@ -175,9 +175,9 @@ class Common(Configuration):
     )
 
     TEMPLATE_LOADERS = (
-            'django.template.loaders.filesystem.Loader',
-            'django.template.loaders.app_directories.Loader',
-        )
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )
 
     # See: http://django-crispy-forms.readthedocs.org/en/latest/install.html#template-packs
     CRISPY_TEMPLATE_PACK = 'bootstrap3'
@@ -276,7 +276,6 @@ class Common(Configuration):
 
 
 class Local(Common):
-
     ########## INSTALLED_APPS
     INSTALLED_APPS = Common.INSTALLED_APPS
     ########## END INSTALLED_APPS
@@ -303,7 +302,6 @@ class Local(Common):
 
 
 class Production(Common):
-
     ########## INSTALLED_APPS
     INSTALLED_APPS = Common.INSTALLED_APPS
     ########## END INSTALLED_APPS
@@ -358,7 +356,7 @@ class Production(Common):
     AWS_EXPIREY = 60 * 60 * 24 * 7
     AWS_HEADERS = {
         'Cache-Control': 'max-age=%d, s-maxage=%d, must-revalidate' % (AWS_EXPIREY,
-            AWS_EXPIREY)
+                                                                       AWS_EXPIREY)
     }
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
@@ -367,7 +365,7 @@ class Production(Common):
 
     ########## EMAIL
     DEFAULT_FROM_EMAIL = values.Value(
-            'django_eve_mon <django_eve_mon-noreply@example.com>')
+        'django_eve_mon <django_eve_mon-noreply@example.com>')
     EMAIL_HOST = values.Value('smtp.sendgrid.com')
     EMAIL_HOST_PASSWORD = values.SecretValue(environ_prefix="", environ_name="SENDGRID_PASSWORD")
     EMAIL_HOST_USER = values.SecretValue(environ_prefix="", environ_name="SENDGRID_USERNAME")
@@ -393,9 +391,10 @@ class Production(Common):
     try:
         # See: https://github.com/rdegges/django-heroku-memcacheify
         from memcacheify import memcacheify
+
         CACHES = memcacheify()
     except ImportError:
         CACHES = values.CacheURLValue(default="memcached://127.0.0.1:11211")
-    ########## END CACHING
+        ########## END CACHING
 
-    ########## Your production stuff: Below this line define 3rd party libary settings
+        ########## Your production stuff: Below this line define 3rd party libary settings
