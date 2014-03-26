@@ -41,6 +41,16 @@ class Skill(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def skillpoints(self):
+        return {
+            1: 250 * self.rank,
+            2: 1415 * self.rank,
+            3: 8000 * self.rank,
+            4: 45255 * self.rank,
+            5: 256000 * self.rank,
+        }
+
 
 class Requirement(models.Model):
     skill = models.ForeignKey(
