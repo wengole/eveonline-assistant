@@ -56,6 +56,7 @@ class Common(Configuration):
         'users',  # custom users app
         # Your stuff: custom apps go here
         'skills',
+        'characters',
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -67,6 +68,7 @@ class Common(Configuration):
         'allauth',  # registration
         'allauth.account',  # registration
         'allauth.socialaccount',  # registration
+        #'allauth.socialaccount.providers.google',
     )
     ########## END APP CONFIGURATION
 
