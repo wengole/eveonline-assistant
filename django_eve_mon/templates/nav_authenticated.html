@@ -1,0 +1,20 @@
+{% load i18n %}
+<ul class="nav navbar-nav">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Characters <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      <li class="dropdown-header">API Keys</li>
+      <li><a href="#">Add API Key</a></li>
+      <li><a href="#">Manage API Keys</a></li>
+      <li class="divider"></li>
+      <li class="dropdown-header">Characters</li>
+      <li><a href="#">Add Character</a></li>
+      <li><a href="#">Manage Characters</a></li>
+    </ul>
+  </li>
+  <li><a href="{% url "skills:list" %}">Skills</a></li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+  <li><a href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a></li>
+  <li><a href="{% url 'allauth:account_logout' %}">{% trans "Logout" %}</a></li>
+</ul>
