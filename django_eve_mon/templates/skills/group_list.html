@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}{% load i18n %}
+
+{% block title %}Skills{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-xs-12">
+        <h2>Skills</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="list-group">
+          {% for group in group_list %}
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading">{{ group.name }}</h4>
+            </a>
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock content %}

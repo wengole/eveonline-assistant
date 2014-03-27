@@ -23,11 +23,11 @@ urlpatterns = patterns('',
 
     # User management
     url(r'^users/', include("users.urls", namespace="users")),
-    url(r'^accounts/', include('allauth.urls')),
+    url(r'^accounts/', include('allauth.urls', namespace='allauth')),
 
     # Uncomment the next line to enable avatars
     url(r'^avatar/', include('avatar.urls')),
 
     # Your stuff: custom urls go here
-
+    url(r'^skill/', include('skills.urls', namespace='skills'))
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
