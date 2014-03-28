@@ -14,7 +14,7 @@ class Command(BaseCommand):
         skills = {}
         for group in r[0].values():
             print "Import group: %s" % group['name']
-            grp = Group.objects.get_or_create(
+            grp, _ = Group.objects.get_or_create(
                 id=group['id'],
                 name=group['name']
             )
