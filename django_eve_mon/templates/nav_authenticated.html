@@ -16,5 +16,5 @@
 </ul>
 <ul class="nav navbar-nav navbar-right">
   <li><a href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a></li>
-  <li><a href="{% url 'allauth:account_logout' %}">{% trans "Logout" %}</a></li>
+  <li><a href="{% url 'account_logout' %}">{% trans "Logout" %}</a></li>
 </ul>
