@@ -1,7 +1,7 @@
 from django.core.management import BaseCommand
 from evelink.eve import EVE
 from tqdm import tqdm
-from django_eve_mon.skills.models import Group, Skill, Requirement, Attribute
+from ...models import Group, Skill, Requirement, Attribute
 
 
 class Command(BaseCommand):
@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 else:
                     # Otehrwise we can skip importing this one
                     continue
-                skl, _ = Skill(
+                skl = Skill(
                     id=skill['id'],
                     name=skill['name'],
                     published=skill['published'],
