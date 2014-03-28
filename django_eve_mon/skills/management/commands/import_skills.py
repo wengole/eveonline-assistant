@@ -20,7 +20,7 @@ class Command(BaseCommand):
             )
             for skill in tqdm(group['skills'].values()):
                 skills[skill['id']] = skill
-                skl = Skill.objects.get_or_create(
+                skl, _ = Skill.objects.get_or_create(
                     id=skill['id'],
                     name=skill['name'],
                     defaults={
