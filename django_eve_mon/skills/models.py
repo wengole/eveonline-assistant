@@ -8,6 +8,9 @@ class Group(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
 
 class Skill(models.Model):
     id = models.IntegerField("Id", primary_key=True)
@@ -15,7 +18,8 @@ class Skill(models.Model):
     group = models.ForeignKey(
         "Group",
         verbose_name="Group",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="skills"
     )
     name = models.CharField("Name", max_length=255)
     rank = models.IntegerField("Rank")
@@ -50,6 +54,9 @@ class Skill(models.Model):
             4: 45255 * self.rank,
             5: 256000 * self.rank,
         }
+
+    class Meta:
+        ordering = ['name']
 
 
 class Requirement(models.Model):

@@ -7,23 +7,23 @@
 
   <div class="container">
 
-    <div class="row">
-      <div class="col-xs-12">
-        <h2>Skills</h2>
-      </div>
-    </div>
+    <div ng-controller="AccordionDemoCtrl">
+      <label class="checkbox">
+        <input type="checkbox" ng-model="oneAtATime">
+        Open only one at a time
+      </label>
 
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="list-group">
-          {% for group in group_list %}
-            <a href="#" class="list-group-item">
-              <h4 class="list-group-item-heading">{{ group.name }}</h4>
-            </a>
-          {% endfor %}
-
-        </div>
-      </div>
+      <accordion close-others="oneAtATime">
+        {% for group in group_list %}
+          <accordion-group heading="{{ group.name }}">
+            {% for skill in group.skills.all %}
+              <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">{{ skill.name }}</h4>
+              </a>
+            {% endfor %}
+          </accordion-group>
+        {% endfor %}
+      </accordion>
     </div>
 
   </div>

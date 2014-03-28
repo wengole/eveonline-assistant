@@ -1,12 +1,12 @@
 from django.conf.urls import patterns, url
-from .views import SkillsList
+from .views import SkillsInGroups
 
 urlpatterns = patterns(
     '',
     # URL pattern for the UserListView
     url(
         regex=r'^$',
-        view=SkillsList.as_view(),
+        view=SkillsInGroups.as_view(),
         name='list'
     ),
 )
