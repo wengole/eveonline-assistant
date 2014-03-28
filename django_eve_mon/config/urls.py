@@ -26,5 +26,6 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls go here
-    url(r'^skill/', include('skills.urls', namespace='skills'))
+    url(r'^skills/', include('skills.urls', namespace='skills')),
+    url(r'^characters/', include('characters.urls', namespace='characters')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
