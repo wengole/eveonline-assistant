@@ -5,13 +5,19 @@ function AccordionDemoCtrl($scope) {
 }
 
 var getCharsBtn = $('#btn-get-characters');
-$(getCharsBtn).on('click', getCharacters($('#add-character-form'), $(getCharsBtn)));
-
-function getCharacters(form, submitButton) {
-  submitButton.button('loading');
-  $.post(document.URL, form.serialize(), function (result) {
-    alert(result);
-  }, 'json').always(function () {
-    submitButton.button('reset')
+$(getCharsBtn).on('click', function () {
+  $(getCharsBtn).button('loading');
+  $.ajax({
+    url: document.URL,
+    type: 'POST',
+    data: $('#add-character-form').serialize(),
+    success: function (result) {
+      console.log(result);
+    },
+    error: function (data) {
+      console.log(data);
+    }
+  }).always(function () {
+    $(getCharsBtn).button('reset')
   });
-}
+});
