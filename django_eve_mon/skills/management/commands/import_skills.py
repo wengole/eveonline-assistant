@@ -1,5 +1,6 @@
 from django.core.management import BaseCommand
 from evelink.eve import EVE
+from tqdm import tqdm
 from django_eve_mon.skills.models import Group, Skill, Requirement, Attribute
 
 
@@ -12,14 +13,14 @@ class Command(BaseCommand):
         r = eve.skill_tree()
         skills = {}
         for group in r[0].values():
-            grp = Group(
+            print "Import group: %s" % group['name']
+            grp = Group.objects.get_or_create(
                 id=group['id'],
                 name=group['name']
             )
-            grp.save()
-            for skill in group['skills'].values():
+            for skill in tqdm(group['skills'].values()):
                 skills[skill['id']] = skill
-                skl = Skill(
+                skl = Skill.objects.get_or_create(
                     id=skill['id'],
                     name=skill['name'],
                     published=skill['published'],
@@ -37,7 +38,8 @@ class Command(BaseCommand):
                 skl.secondary_attribute = attr
                 skl.save()
 
-        for skill in skills.values():
+        print "Populating Requirement table"
+        for skill in tqdm(skills.values()):
             skl = Skill.objects.get(id=skill['id'])
             for req_skill in skill['required_skills'].values():
                 rskl = Skill.objects.get(id=req_skill['id'])
