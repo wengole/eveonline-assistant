@@ -367,7 +367,7 @@ class Production(Common):
 
     ########## EMAIL
     DEFAULT_FROM_EMAIL = values.Value(
-        'django_eve_mon <django_eve_mon-noreply@example.com>')
+        'django_eve_mon <noreply@django-eve-mon.herokuapp.com>')
     EMAIL_HOST = values.Value('smtp.sendgrid.com')
     EMAIL_HOST_PASSWORD = values.SecretValue(environ_prefix="", environ_name="SENDGRID_PASSWORD")
     EMAIL_HOST_USER = values.SecretValue(environ_prefix="", environ_name="SENDGRID_USERNAME")

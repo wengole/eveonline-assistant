@@ -12,7 +12,7 @@ class Migration(DataMigration):
         """Set site domain and name."""
         Site = orm['sites.Site']
         site = Site.objects.get(id=settings.SITE_ID)
-        site.domain = "example.com"
+        site.domain = "django-eve-mon.herokuapp.com"
         site.name = "django_eve_mon"
         site.save()
 
