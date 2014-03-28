@@ -20,15 +20,24 @@ class Command(BaseCommand):
             )
             for skill in tqdm(group['skills'].values()):
                 skills[skill['id']] = skill
-                skl, _ = Skill.objects.get_or_create(
+                try:
+                    Skill.objects.get(
+                        id=skill['id'],
+                        name=skill['name']
+                    )
+                except Skill.DoesNotExist:
+                    # Create the skill if it does not exist
+                    pass
+                else:
+                    # Otehrwise we can skip importing this one
+                    continue
+                skl, _ = Skill(
                     id=skill['id'],
                     name=skill['name'],
-                    defaults={
-                        'published': skill['published'],
-                        'rank': skill['rank'],
-                        'description': skill['description'],
-                        'group': grp,
-                    }
+                    published=skill['published'],
+                    rank=skill['rank'],
+                    description=skill['description'],
+                    group=grp,
                 )
                 attr, _ = Attribute.objects.get_or_create(
                     name=skill['attributes']['primary'] or ''
