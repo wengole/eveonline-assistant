@@ -4,6 +4,12 @@ from django.db import models
 class ApiKey(models.Model):
     key_id = models.IntegerField("Key id", primary_key=True)
     verification_code = models.CharField("Verification code", max_length=255)
+    user = models.ForeignKey(
+        'users.User',
+        verbose_name="User",
+        on_delete=models.CASCADE,
+        related_name='api_keys'
+    )
 
     def __unicode__(self):
         return self.key_id
@@ -14,7 +20,9 @@ class Character(models.Model):
     apikey = models.ForeignKey(
         'ApiKey',
         verbose_name="Api Key",
-        on_delete=models.CASCADE
+        on_delete=models.SET_NULL,
+        related_name='characters_added',
+        null=True
     )
     user = models.ForeignKey(
         'users.User',
