@@ -23,10 +23,12 @@ class Command(BaseCommand):
                 skl = Skill.objects.get_or_create(
                     id=skill['id'],
                     name=skill['name'],
-                    published=skill['published'],
-                    rank=skill['rank'],
-                    description=skill['description'],
-                    group=grp,
+                    defaults={
+                        'published': skill['published'],
+                        'rank': skill['rank'],
+                        'description': skill['description'],
+                        'group': grp,
+                    }
                 )
                 attr, _ = Attribute.objects.get_or_create(
                     name=skill['attributes']['primary'] or ''

@@ -25,9 +25,6 @@ urlpatterns = patterns('',
     url(r'^users/', include("users.urls", namespace="users")),
     url(r'^accounts/', include('allauth.urls')),
 
-    # Uncomment the next line to enable avatars
-    url(r'^avatar/', include('avatar.urls')),
-
     # Your stuff: custom urls go here
     url(r'^skill/', include('skills.urls', namespace='skills'))
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

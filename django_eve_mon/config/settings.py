@@ -48,7 +48,6 @@ class Common(Configuration):
     THIRD_PARTY_APPS = (
         'south',  # Database migration helpers:
         'crispy_forms',  # Form layouts
-        'avatar',  # for user avatars
     )
 
     # Apps specific for this project go here.
