@@ -20,12 +20,14 @@
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Actions</th>
               </tr>
             </thead>
             {% for character in character_list %}
               <tr>
-                <td href="#" class="list-group-item">
-                  {{ character.name }}
+                <td>{{ character.name }}</td>
+                <td>
+                  <a href="#">Delete</a>
                 </td>
               </tr>
             {% endfor %}
