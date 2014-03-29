@@ -18,6 +18,7 @@
       <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">
+      <li class="dropdown-header">{{ user.username }}</li>
       <li><a href="{% url 'users:update' %}">Update My Info</a></li>
       <li><a href="{% url 'account_email' %}">Manage E-Mail Addresses</a></li>
     </ul>
