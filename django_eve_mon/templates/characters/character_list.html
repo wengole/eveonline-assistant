@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}{% load i18n %}
+
+{% block title %}Characters{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>Characters</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="bs-component">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+              </tr>
+            </thead>
+            {% for character in character_list %}
+              <tr>
+                <td href="#" class="list-group-item">
+                  {{ character.name }}
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock content %}
