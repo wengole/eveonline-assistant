@@ -1,6 +1,8 @@
 from braces.views import JSONResponseMixin, LoginRequiredMixin
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from evelink.account import Account
 from evelink.api import API
 
@@ -8,7 +10,7 @@ from .models import ApiKey, Character
 
 
 class AddCharacter(LoginRequiredMixin, JSONResponseMixin, TemplateView):
-    template_name = "characters/add_character.html"
+    template_name = "characters/character_add.html"
     content_type = "text/html"
 
     def post(self, request):
@@ -62,6 +64,8 @@ class AddCharacter(LoginRequiredMixin, JSONResponseMixin, TemplateView):
                     'skillpoints': 0
                 }
             )
-        return self.render_json_response(
-            {'message': u"Successfully added character(s)"}
-        )
+        return redirect(reverse('characters:manage'))
+
+
+class ManageCharacters(LoginRequiredMixin, ListView):
+    model = Character

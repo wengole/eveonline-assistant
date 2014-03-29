@@ -2,7 +2,7 @@
 {% block title %}Add Character{% endblock %}
 {% block content %}
   <h1>Add character</h1>
-  <form class="form-horizontal" id="add-character-form" method="post" action="">
+  <form class="form-horizontal" id="add-character-form" method="post">
     {% csrf_token %}
     <fieldset>
       <div class="form-group">
@@ -40,7 +40,15 @@
         </div>
       </div>
     </fieldset>
-    <button class="btn btn-info" id="btn-get-characters" data-loading-text="Getting characters..." type="submit">Get Characters</button>
+    <button class="btn btn-info"
+            id="btn-get-characters"
+            data-loading-text="Getting characters..."
+            type="submit">Get Characters</button>
+    <button class="btn btn-success"
+            style="display: none;"
+            id="btn-add-characters"
+            data-loading-text="Adding characters..."
+            type="submit">Add characters</button>
   </form>
   {% if request.user.had_apikeys %}
 
