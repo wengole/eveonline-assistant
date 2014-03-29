@@ -1,4 +1,5 @@
-from braces.views import JSONResponseMixin
+from braces.views import JSONResponseMixin, LoginRequiredMixin
+
 from django.views.generic import TemplateView
 from evelink.account import Account
 from evelink.api import API
@@ -6,7 +7,7 @@ from evelink.api import API
 from .models import ApiKey, Character
 
 
-class AddCharacter(JSONResponseMixin, TemplateView):
+class AddCharacter(LoginRequiredMixin, JSONResponseMixin, TemplateView):
     template_name = "characters/add_character.html"
     content_type = "text/html"
 
@@ -41,7 +42,6 @@ class AddCharacter(JSONResponseMixin, TemplateView):
         api = API(api_key=(key_id, vcode))
         account = Account(api=api)
         return account.characters()[0]
-
 
     def add_characters(self, key_id, vcode, char_ids, user):
         characters = self.get_characters_from_api(key_id, vcode)
