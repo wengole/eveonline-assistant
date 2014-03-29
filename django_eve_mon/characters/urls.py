@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from .views import AddCharacter, ManageCharacters
+from .views import AddCharacter, ManageCharacters, ManageApiKeys
 
 urlpatterns = patterns(
     '',
@@ -13,5 +13,10 @@ urlpatterns = patterns(
         regex=r'^manage/$',
         view=ManageCharacters.as_view(),
         name='manage'
+    ),
+    url(
+        regex=r'^apis/manage/$',
+        view=ManageApiKeys.as_view(),
+        name='manage-apis'
     ),
 )

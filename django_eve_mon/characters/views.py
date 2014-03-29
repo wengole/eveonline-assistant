@@ -69,3 +69,7 @@ class AddCharacter(LoginRequiredMixin, JSONResponseMixin, TemplateView):
 
 class ManageCharacters(LoginRequiredMixin, ListView):
     model = Character
+
+
+class ManageApiKeys(LoginRequiredMixin, ListView):
+    model = ApiKey
