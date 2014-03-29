@@ -2,54 +2,58 @@
 {% block title %}Add Character{% endblock %}
 {% block content %}
   <h1>Add character</h1>
-  <form class="form-horizontal" id="add-character-form" method="post">
-    {% csrf_token %}
-    <fieldset>
-      <div class="form-group">
-        <label for="input-key-id" class="col-lg-2 control-label">Key ID</label>
+  <div class="well bs-component">
+    <form class="form-horizontal" id="add-character-form" method="post">
+      {% csrf_token %}
+      <fieldset>
+        <div class="form-group">
+          <label for="input-key-id" class="col-lg-2 control-label">Key ID</label>
 
-        <div class="col-lg-10">
-          <input type="text"
-                 class="form-control"
-                 id="input-key-id"
-                 placeholder="Key ID"
-                 name="keyid"/>
+          <div class="col-lg-10">
+            <input type="text"
+                   class="form-control"
+                   id="input-key-id"
+                   placeholder="Key ID"
+                   name="keyid"/>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="input-vcode"
-               class="col-lg-2 control-label">Verification Code</label>
+        <div class="form-group">
+          <label for="input-vcode"
+                 class="col-lg-2 control-label">Verification Code</label>
 
-        <div class="col-lg-10">
-          <input type="text"
-                 class="form-control"
-                 id="input-vcode"
-                 placeholder="Verification Code"
-                 name="vcode"/>
+          <div class="col-lg-10">
+            <input type="text"
+                   class="form-control"
+                   id="input-vcode"
+                   placeholder="Verification Code"
+                   name="vcode"/>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="select-characters"
-               class="col-lg-2 control-label">Character(s)</label>
+        <div class="form-group">
+          <label for="select-characters"
+                 class="col-lg-2 control-label">Character(s)</label>
 
-        <div class="col-lg-10">
-          <input type="text"
-                 id="select-characters"
-                 class="form-control input-lg"
-                 name="characters"/>
+          <div class="col-lg-10">
+            <input type="text"
+                   id="select-characters"
+                   class="form-control input-lg"
+                   name="characters"/>
+          </div>
         </div>
-      </div>
-    </fieldset>
-    <button class="btn btn-info"
-            id="btn-get-characters"
-            data-loading-text="Getting characters..."
-            type="submit">Get Characters</button>
-    <button class="btn btn-success"
-            style="display: none;"
-            id="btn-add-characters"
-            data-loading-text="Adding characters..."
-            type="submit">Add characters</button>
-  </form>
+      </fieldset>
+      <button class="btn btn-info"
+              id="btn-get-characters"
+              data-loading-text="Getting characters..."
+              type="submit">Get Characters
+      </button>
+      <button class="btn btn-success"
+              style="display: none;"
+              id="btn-add-characters"
+              data-loading-text="Adding characters..."
+              type="submit">Add characters
+      </button>
+    </form>
+  </div>
   {% if request.user.had_apikeys %}
 
   {% endif %}
