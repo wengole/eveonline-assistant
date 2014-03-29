@@ -17,10 +17,11 @@
   {% block css %}
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/darkly/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.min.css">
+    <link rel="stylesheet" href="{% static "css/select2-bootstrap.css" %}">
 
     <!-- This file store project specific CSS -->
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrapValidator.min.css' %}" rel="stylesheet">
   {% endblock %}
 
   {% block angular %}
@@ -86,7 +87,7 @@
 
   <!-- Latest compiled and minified JavaScript -->
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-  <script src="{% static 'js/bootstrapValidator.min.js' %}"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.min.js"></script>
 
   <!-- Your stuff: Third-party javascript libraries go here -->
 

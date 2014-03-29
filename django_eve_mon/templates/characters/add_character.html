@@ -6,26 +6,35 @@
     {% csrf_token %}
     <fieldset>
       <div class="form-group">
-        <label for="inputKeyId" class="col-lg-2 control-label">Key ID</label>
+        <label for="input-key-id" class="col-lg-2 control-label">Key ID</label>
 
         <div class="col-lg-10">
           <input type="text"
                  class="form-control"
-                 id="inputKeyId"
+                 id="input-key-id"
                  placeholder="Key ID"
                  name="keyid"/>
         </div>
       </div>
       <div class="form-group">
-        <label for="inputVCode"
+        <label for="input-vcode"
                class="col-lg-2 control-label">Verification Code</label>
 
         <div class="col-lg-10">
           <input type="text"
                  class="form-control"
-                 id="inputVCode"
+                 id="input-vcode"
                  placeholder="Password"
                  name="vcode"/>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="form-group">
+        <label for="select-characters" class="col-lg-2 control-label">Character(s)</label>
+
+        <div class="col-lg-10">
+          <input type="text" id="select-characters" class="form-control input-lg">
         </div>
       </div>
     </fieldset>
@@ -34,49 +43,4 @@
   {% if request.user.had_apikeys %}
 
   {% endif %}
-{% endblock %}
-
-{% block javascript %}
-  {{ block.super }}
-  <script type="text/javascript">
-    $(document).ready(function () {
-      $('#addCharacterForm').bootstrapValidator({
-        message: 'This value is not valid',
-        feedbackIcons: {
-          valid: 'glyphicon glyphicon-ok',
-          invalid: 'glyphicon glyphicon-remove',
-          validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-          username: {
-            message: 'The username is not valid',
-            validators: {
-              notEmpty: {
-                message: 'The username is required and cannot be empty'
-              },
-              stringLength: {
-                min: 6,
-                max: 30,
-                message: 'The username must be more than 6 and less than 30 characters long'
-              },
-              regexp: {
-                regexp: /^[a-zA-Z0-9_]+$/,
-                message: 'The username can only consist of alphabetical, number and underscore'
-              }
-            }
-          },
-          email: {
-            validators: {
-              notEmpty: {
-                message: 'The email is required and cannot be empty'
-              },
-              emailAddress: {
-                message: 'The input is not a valid email address'
-              }
-            }
-          }
-        }
-      });
-    });
-  </script>
 {% endblock %}
