@@ -1,0 +1,20 @@
+<div ng-controller="AccordionDemoCtrl">
+  <label class="checkbox">
+    <input type="checkbox" ng-model="oneAtATime">
+    Open only one at a time
+  </label>
+
+  <accordion close-others="oneAtATime">
+    {% for group in group_list %}
+      {% if group.has_published_skills %}
+        <accordion-group heading="{{ group.name }}">
+          {% for skill in group.skills.all %}
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading">{{ skill.name }}</h4>
+            </a>
+          {% endfor %}
+        </accordion-group>
+      {% endif %}
+    {% endfor %}
+  </accordion>
+</div>
