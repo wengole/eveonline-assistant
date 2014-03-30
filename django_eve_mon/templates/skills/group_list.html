@@ -15,6 +15,7 @@
 
       <accordion close-others="oneAtATime">
         {% for group in group_list %}
+          {% if group.has_published_skills %}
           <accordion-group heading="{{ group.name }}">
             {% for skill in group.skills.all %}
               <a href="#" class="list-group-item">
@@ -22,6 +23,7 @@
               </a>
             {% endfor %}
           </accordion-group>
+          {% endif %}
         {% endfor %}
       </accordion>
     </div>

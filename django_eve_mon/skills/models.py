@@ -8,6 +8,10 @@ class Group(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def has_published_skills(self):
+        return len(self.skills.filter(published=True)) > 0
+
     class Meta:
         ordering = ['name']
 
