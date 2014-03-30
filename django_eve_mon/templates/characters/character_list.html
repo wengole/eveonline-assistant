@@ -25,7 +25,7 @@
             </thead>
             {% for character in character_list %}
               <tr>
-                <td>{{ character.name }}</td>
+                <td><a href="{% url "characters:detail" %}">{{ character.name }}</a></td>
                 <td>
                   <a href="#">Delete</a>
                 </td>
