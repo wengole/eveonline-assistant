@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 from django.views.generic import TemplateView, ListView, DetailView
 from evelink.account import Account
 from evelink.api import API
+from django_eve_mon.skills.models import Group
 
 from .models import ApiKey, Character
 
@@ -77,3 +78,9 @@ class ManageApiKeys(LoginRequiredMixin, ListView):
 
 class CharacterDetail(LoginRequiredMixin, DetailView):
     model = Character
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'group_list': Group.objects.all()
+        }
+        return super(CharacterDetail, self).get_context_data(**context)
