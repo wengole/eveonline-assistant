@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 
 
@@ -34,6 +35,9 @@ class Character(models.Model):
         max_length=255
     )
     skillpoints = models.IntegerField("Skillpoints")
+
+    def get_absolute_url(self):
+        return reverse('characters:detail', args=[str(self.id)])
 
     def __unicode__(self):
         return self.name

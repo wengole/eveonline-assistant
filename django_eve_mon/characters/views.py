@@ -2,7 +2,7 @@ from braces.views import JSONResponseMixin, LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 from evelink.account import Account
 from evelink.api import API
 
@@ -73,3 +73,7 @@ class ManageCharacters(LoginRequiredMixin, ListView):
 
 class ManageApiKeys(LoginRequiredMixin, ListView):
     model = ApiKey
+
+
+class CharacterDetail(LoginRequiredMixin, DetailView):
+    model = Character
