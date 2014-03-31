@@ -43,9 +43,9 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navbar-collapse">
       {% if request.user.is_authenticated %}
-        {% include "nav_authenticated.html" %}
+        {% include "nav/authenticated.html" %}
       {% else %}
-        {% include "nav_no_auth.html" %}
+        {% include "nav/no_auth.html" %}
       {% endif %}
       <!-- /.navbar-collapse -->
     </div>
