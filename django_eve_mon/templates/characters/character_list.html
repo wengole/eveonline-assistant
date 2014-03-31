@@ -27,7 +27,8 @@
               <tr>
                 <td><a href="{% url "characters:detail" char_id=character.id %}">{{ character.name }}</a></td>
                 <td>
-                  <a href="{% url "characters:fetch" %}">Fetch Skills</a>|
+                  <a href="{% url "characters:fetch" char_id=character.id %}">
+                    Fetch Skills</a>|
                   <a href="#">Delete</a>
                 </td>
               </tr>
