@@ -72,6 +72,10 @@ class ManageCharacters(LoginRequiredMixin, ListView):
     model = Character
 
 
+class FetchSkills(LoginRequiredMixin, ListView):
+    model = Character
+
+
 class ManageApiKeys(LoginRequiredMixin, ListView):
     model = ApiKey
 
@@ -80,7 +84,9 @@ class CharacterDetail(LoginRequiredMixin, DetailView):
     model = Character
 
     def get_context_data(self, **kwargs):
+        character = self.get_object()
         context = {
+            'object_type': character._meta.model_name,
             'group_list': Group.objects.all()
         }
         return super(CharacterDetail, self).get_context_data(**context)

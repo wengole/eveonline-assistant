@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from .views import AddCharacter, ManageCharacters, ManageApiKeys, CharacterDetail
+from .views import AddCharacter, ManageCharacters, ManageApiKeys, CharacterDetail, FetchSkills
 
 urlpatterns = patterns(
     '',
@@ -13,6 +13,11 @@ urlpatterns = patterns(
         regex=r'^manage/$',
         view=ManageCharacters.as_view(),
         name='manage'
+    ),
+    url(
+        regex=r'^manage/(?P<char_id>\d+)/fetch/$',
+        view=FetchSkills.as_view(),
+        name='fetch'
     ),
     url(
         regex=r'^manage/(?P<char_id>\d+)/$',
