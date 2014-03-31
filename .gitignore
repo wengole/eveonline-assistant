@@ -29,4 +29,6 @@ nosetests.xml
 node_modules/
 
 # Campass
-.sass-cachedjango_eve_mon/config/pycharm_settings.py
+.sass-cache
+django_eve_mon/config/pycharm_settings.py
+test.py
