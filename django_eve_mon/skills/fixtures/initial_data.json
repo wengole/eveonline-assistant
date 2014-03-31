@@ -1,0 +1,50 @@
+[
+  {
+    "pk": 1,
+    "model": "skills.attribute",
+    "fields": {
+      "slot": 1,
+      "name": "perception"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "skills.attribute",
+    "fields": {
+      "slot": 3,
+      "name": "willpower"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "skills.attribute",
+    "fields": {
+      "slot": 5,
+      "name": "charisma"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "skills.attribute",
+    "fields": {
+      "slot": 2,
+      "name": "memory"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "skills.attribute",
+    "fields": {
+      "slot": 4,
+      "name": "intelligence"
+    }
+  },
+  {
+    "pk": 8,
+    "model": "skills.attribute",
+    "fields": {
+      "slot": 99,
+      "name": ""
+    }
+  }
+]

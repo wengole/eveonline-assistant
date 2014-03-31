@@ -77,6 +77,7 @@ class Requirement(models.Model):
 
 class Attribute(models.Model):
     name = models.CharField("Name", max_length=255)
+    slot = models.IntegerField("Slot")
 
     def __unicode__(self):
         return self.name
