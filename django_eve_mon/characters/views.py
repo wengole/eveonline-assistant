@@ -1,11 +1,10 @@
 from braces.views import JSONResponseMixin, LoginRequiredMixin
+from collections import OrderedDict
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
-
 from django.views.generic import TemplateView, ListView, DetailView
 from evelink.account import Account
 from evelink.api import API
-from django_eve_mon.skills.models import Group
 
 from .models import ApiKey, Character
 
@@ -85,8 +84,13 @@ class CharacterDetail(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         character = self.get_object()
+        skills_list = character.skills_known.order_by('skill__group')
+        groups = OrderedDict()
+        for skill in skills_list:
+            if skill.skill.group.name not in groups:
+                groups[skill.skill.group.name] = []
+            groups[skill.skill.group.name].append(skill)
         context = {
-            'object_type': character._meta.model_name,
-            'group_list': Group.objects.all()
+            'groups': groups
         }
         return super(CharacterDetail, self).get_context_data(**context)
