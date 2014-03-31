@@ -16,7 +16,7 @@ urlpatterns = patterns(
     ),
     url(
         regex=r'^manage/(?P<char_id>\d+)/fetch/$',
-        view=FetchSkills.as_view(),
+        view=FetchSkills.as_view(pk_url_kwarg='char_id'),
         name='fetch'
     ),
     url(

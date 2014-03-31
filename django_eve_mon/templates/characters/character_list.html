@@ -25,10 +25,14 @@
             </thead>
             {% for character in character_list %}
               <tr>
-                <td><a href="{% url "characters:detail" char_id=character.id %}">{{ character.name }}</a></td>
                 <td>
-                  <a href="{% url "characters:fetch" char_id=character.id %}">
-                    Fetch Skills</a>|
+                  <a href="{{ character.get_absolute_url }}">
+                    {{ character.name }}
+                  </a>
+                </td>
+                <td>
+                  <a href="{{ character.get_fetch_url}}">
+                    Update</a> |
                   <a href="#">Delete</a>
                 </td>
               </tr>
