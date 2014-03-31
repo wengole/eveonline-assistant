@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.views.generic import TemplateView, ListView, DetailView
+from django_eve_mon.characters.utils import UserIsOwnerMixin
 
 from .models import ApiKey, Character
 
@@ -71,11 +72,8 @@ class ManageCharacters(LoginRequiredMixin, ListView):
         return queryset
 
 
-class FetchSkills(LoginRequiredMixin, DetailView):
+class FetchSkills(UserIsOwnerMixin, DetailView):
     model = Character
-
-    def test_func(self, user):
-        return self.get_object().is_owner(user)
 
     def get(self, request, *args, **kwargs):
         character = self.get_object()
@@ -92,11 +90,8 @@ class ManageApiKeys(LoginRequiredMixin, ListView):
         return queryset
 
 
-class CharacterDetail(UserPassesTestMixin, DetailView):
+class CharacterDetail(UserIsOwnerMixin, DetailView):
     model = Character
-
-    def test_func(self, user):
-        return self.get_object().is_owner(user)
 
     def get_context_data(self, **kwargs):
         character = self.get_object()
