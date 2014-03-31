@@ -125,6 +125,10 @@ class SkillTrained(models.Model):
     skillpoints = models.IntegerField("Skillpoints")
     level = models.IntegerField("Level")
 
+    @property
+    def skillpoints_for_next_level(self):
+        return self.skill.skillpoints[self.level + 1] if self.level < 5 else self.skill.skillpoints[5]
+
     def __unicode__(self):
         return u"%s - %s L%d" % (self.character.name, self.skill.name, self.level)
 
@@ -146,3 +150,6 @@ class AttributeValues(models.Model):
 
     def __unicode__(self):
         return u"%s - %s: %d" % (self.character, self.attribute.name, (self.base + self.bonus))
+
+    class Meta:
+        ordering = ['attribute__slot']

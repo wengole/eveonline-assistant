@@ -14,14 +14,19 @@
       <div id="collapse{{ forloop.counter }}"
            class="panel-collapse collapse{% if forloop.first %} in{% endif %}">
         <div class="panel-body">
-          {% for skill_known in skills %}
-            {% with skill=skill_known.skill %}
-              <a href="#" class="list-group-item">
-                <span class="badge">Level: {{ skill_known.level }}</span>
-                <h4 class="list-group-item-heading">{{ skill.name }}</h4>
-              </a>
-            {% endwith %}
-          {% endfor %}
+          <table class="table table-striped table-hover">
+            <tbody>
+            {% for skill_known in skills %}
+              {% with skill=skill_known.skill %}
+                <tr>
+                  <td>{{ skill.name }}</td>
+                  <td>{{ skill_known.skillpoints }} / {{ skill_known.skillpoints_for_next_level }}</td>
+                  <td style="text-align: right;">{{ skill_known.level }}</td>
+                </tr>
+              {% endwith %}
+            {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

@@ -1,27 +1,31 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Character: {{ object.name }}{% endblock %}
+{% block title %}Character: {{ character.name }}{% endblock %}
 
 {% block content %}
   <div class="container">
-    <div class="row">
-      <div class="well">
-        <div class="row">
-          <div class="col-sm-4">
-            <h1>{{ object.name }}</h1>
-            <img src="//image.eveonline.com/Character/{{ object.id }}_256.jpg"/>
-          </div>
-          <div class="col-sm-8">
-            <dl>
-
-            </dl>
-          </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">{{ character.name }}</h1>
+      </div>
+      <div class="panel-body">
+        <div class="col-sm-4">
+          <img src="//image.eveonline.com/Character/{{ character.id }}_256.jpg"/>
+        </div>
+        <div class="col-sm-8">
+          <dl class="dl-horizontal">
+            {% for attribute in character.attributes.all %}
+              <dt>{{ attribute.attribute.name|capfirst }}</dt>
+              <dd>{{ attribute.base }} + {{ attribute.bonus }}</dd>
+            {% endfor %}
+          </dl>
         </div>
       </div>
-      <div class="col-sm-12">
-        {% include "characters/skills_accordion.html" %}
-      </div>
     </div>
+    <div class="col-sm-12">
+      {% include "characters/skills_accordion.html" %}
+    </div>
+  </div>
   </div>
 {% endblock content %}
