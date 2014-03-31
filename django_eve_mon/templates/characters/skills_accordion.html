@@ -1,12 +1,12 @@
 <div class="panel-group" id="skills-accordion">
-  {% for group in group_list %}
+  {% for group, skills in groups.items %}
     <div class="panel panel-default">
       <a data-toggle="collapse"
          data-parent="#skills-accordion"
          href="#collapse{{ forloop.counter }}">
         <div class="panel-heading">
           <h4 class="panel-title">
-            {{ group.name }}
+            {{ group }}
           </h4>
         </div>
       </a>
@@ -14,10 +14,13 @@
       <div id="collapse{{ forloop.counter }}"
            class="panel-collapse collapse{% if forloop.first %} in{% endif %}">
         <div class="panel-body">
-          {% for skill in group.skills.all %}
-            <a href="#" class="list-group-item">
-              <h4 class="list-group-item-heading">{{ skill.name }}</h4>
-            </a>
+          {% for skill_known in skills %}
+            {% with skill=skill_known.skill %}
+              <a href="#" class="list-group-item">
+                <span class="badge">Level: {{ skill_known.level }}</span>
+                <h4 class="list-group-item-heading">{{ skill.name }}</h4>
+              </a>
+            {% endwith %}
           {% endfor %}
         </div>
       </div>

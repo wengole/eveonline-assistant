@@ -1,13 +1,7 @@
-angular.module('djevemon', ['ui.bootstrap']);
-
 var characterSelect = $('#select-characters');
 var getCharsBtn = $('#btn-get-characters');
 var addCharsBtn = $('#btn-add-characters');
 var addCharForm = $('#add-character-form');
-
-function AccordionDemoCtrl($scope) {
-  $scope.oneAtATime = true;
-}
 
 function ajaxPostAddCharacterForm() {
   $.ajax({
