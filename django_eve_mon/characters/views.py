@@ -1,12 +1,11 @@
 from collections import OrderedDict
 
-from braces.views import JSONResponseMixin, LoginRequiredMixin, \
-    UserPassesTestMixin
+from braces.views import JSONResponseMixin, LoginRequiredMixin
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.views.generic import TemplateView, ListView, DetailView
-from django_eve_mon.characters.utils import UserIsOwnerMixin
+from .utils import UserIsOwnerMixin
 
 from .models import ApiKey, Character
 
@@ -72,12 +71,13 @@ class ManageCharacters(LoginRequiredMixin, ListView):
         return queryset
 
 
-class FetchSkills(UserIsOwnerMixin, DetailView):
+class UpdateCharacter(UserIsOwnerMixin, DetailView):
     model = Character
 
     def get(self, request, *args, **kwargs):
         character = self.get_object()
         character.update_attributes()
+        character.update_skills()
         messages.success(request, '%s updated successfully' % character.name)
         return redirect(reverse('characters:manage'))
 

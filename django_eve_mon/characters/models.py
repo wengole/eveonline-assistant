@@ -3,7 +3,9 @@ from django.db import models
 from evelink.account import Account
 from evelink.api import API
 from evelink.char import Char
-from django_eve_mon.skills.models import Attribute
+
+from skills.models import Attribute
+from skills.models import Skill
 
 
 class ApiKey(models.Model):
@@ -83,6 +85,22 @@ class Character(models.Model):
             if bonus_val is not None:
                 attr_value.bonus = bonus_val['value']
             attr_value.save()
+
+    def update_skills(self):
+        skills = self.char_sheet['skills']
+        for skill in skills:
+            skl = Skill.objects.get(id=skill['id'])
+            skl_lvl, _ = SkillTrained.objects.get_or_create(
+                character=self,
+                skill=skl,
+                defaults={
+                    'skillpoints': 0,
+                    'level': 0
+                }
+            )
+            skl_lvl.skillpoints = skill['skillpoints']
+            skl_lvl.level = skill['level']
+            skl_lvl.save()
 
     def is_owner(self, user):
         return self.user == user
