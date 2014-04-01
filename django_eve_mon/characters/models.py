@@ -7,6 +7,7 @@ from django.db import models
 from evelink.account import Account
 from evelink.api import API
 from evelink.char import Char
+from core.utils import DjangoCache
 
 from skills.models import Attribute
 from skills.models import Skill
@@ -24,7 +25,10 @@ class ApiKey(models.Model):
 
     @property
     def api(self):
-        return API(api_key=(self.key_id, self.verification_code))
+        return API(
+            api_key=(self.key_id, self.verification_code),
+            cache=DjangoCache()
+        )
 
     def is_owner(self, user):
         return self.user == user
