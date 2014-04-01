@@ -96,7 +96,6 @@ class Character(models.Model):
             'text': 'Updated %s\'s character sheet successfully' % self.name
         }
 
-
     def _update_attributes(self):
         sheet_attributes = self.char_sheet['attributes']
         for attr in sheet_attributes:
@@ -193,6 +192,10 @@ class SkillTrained(models.Model):
     def __unicode__(self):
         return u'%s - %s L%d' % (self.character.name, self.skill.name, self.level)
 
+    class Meta:
+        verbose_name_plural = 'Skills Trained'
+        ordering = ['skill__name']
+
 
 class AttributeValues(models.Model):
     character = models.ForeignKey(
@@ -218,3 +221,20 @@ class AttributeValues(models.Model):
 
     class Meta:
         ordering = ['attribute__slot']
+        verbose_name_plural = 'Attribute Values'
+
+
+class SkillQueue(models.Model):
+    character = models.ForeignKey(
+        'Character',
+        verbose_name='Character',
+        on_delete=models.CASCADE,
+        related_name='skill_queue'
+    )
+    skill = models.ForeignKey(
+        'skills.Skill',
+        verbose_name='Skill',
+        on_delete=models.CASCADE,
+        related_name='in_queues'
+    )
+    position = models.IntegerField('Position')

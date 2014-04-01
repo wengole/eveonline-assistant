@@ -65,7 +65,17 @@
   {% endif %}
 
   {% block content %}
-    <p>Use this document as a way to quick start any new project.</p>
+    <div class="jumbotron">
+      <h1>Django EVE Mon</h1>
+
+      <p>An online version of EVE Mon (in theory)</p>
+
+      <p>
+        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">
+        Get started
+        </a>
+      </p>
+    </div>
   {% endblock content %}
 
 </div>
