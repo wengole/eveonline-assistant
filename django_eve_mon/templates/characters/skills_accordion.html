@@ -1,3 +1,4 @@
+{% load humanize %}
 <div class="panel-group" id="skills-accordion">
   {% for group, skills in groups.items %}
     <div class="panel panel-default">
@@ -18,9 +19,19 @@
             <tbody>
             {% for skill_known in skills %}
               {% with skill=skill_known.skill %}
-                <tr>
-                  <td>{{ skill.name }}</td>
-                  <td>{{ skill_known.skillpoints }} / {{ skill_known.skillpoints_for_next_level }}</td>
+                <tr class="
+                  {% if skill_known.progress > 0.0 and skill_known.progress < 100.0 %}
+                    warning
+                  {% elif skill_known.progress == 100.0 and skill_known.level == 5 %}
+                    success
+                  {% endif %}">
+                  <td>{{ skill.name }} ({{ skill.rank }}x)</td>
+                  <td>
+                    <div class="progress">
+                      <div class="progress-bar" style="width: {{ skill_known.progress }}%;"></div>
+                    </div>
+                  </td>
+                  <td>{{ skill_known.skillpoints|intcomma }} / {{ skill_known.sp_to_next_level|intcomma }}</td>
                   <td style="text-align: right;">{{ skill_known.level }}</td>
                 </tr>
               {% endwith %}

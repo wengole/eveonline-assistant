@@ -52,6 +52,7 @@ class Skill(models.Model):
     @property
     def skillpoints(self):
         return {
+            0: 0,
             1: 250 * self.rank,
             2: 1415 * self.rank,
             3: 8000 * self.rank,

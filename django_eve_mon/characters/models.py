@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.urlresolvers import reverse
 from django.db import models
 from evelink.account import Account
@@ -126,8 +128,18 @@ class SkillTrained(models.Model):
     level = models.IntegerField("Level")
 
     @property
-    def skillpoints_for_next_level(self):
+    def sp_to_next_level(self):
         return self.skill.skillpoints[self.level + 1] if self.level < 5 else self.skill.skillpoints[5]
+
+    @property
+    def progress(self):
+        if self.level == 5:
+            return Decimal(100)
+        start = Decimal(self.skillpoints - self.skill.skillpoints[self.level])
+        end = Decimal(self.sp_to_next_level - self.skill.skillpoints[self.level])
+        if end == 0:
+            return Decimal(0)
+        return (start / end) * 100
 
     def __unicode__(self):
         return u"%s - %s L%d" % (self.character.name, self.skill.name, self.level)
