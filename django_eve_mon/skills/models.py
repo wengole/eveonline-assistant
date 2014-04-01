@@ -46,9 +46,6 @@ class Skill(models.Model):
         related_name="secondary_for"
     )
 
-    def __unicode__(self):
-        return self.name
-
     @property
     def skillpoints(self):
         return {
@@ -59,6 +56,12 @@ class Skill(models.Model):
             4: 45255 * self.rank,
             5: 256000 * self.rank,
         }
+
+    def points_per_second(self, primary_attribute, secondary_attribute):
+        return (primary_attribute + (secondary_attribute / 2)) / 60
+
+    def __unicode__(self):
+        return self.name
 
     class Meta:
         ordering = ['name']

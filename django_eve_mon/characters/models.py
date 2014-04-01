@@ -1,4 +1,5 @@
 from decimal import Decimal
+from datetime import timedelta
 
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -132,6 +133,24 @@ class SkillTrained(models.Model):
         return self.skill.skillpoints[self.level + 1] if self.level < 5 else self.skill.skillpoints[5]
 
     @property
+    def primary_attribute_value(self):
+        return Decimal(self.character.attributes.get(attribute=self.skill.primary_attribute).total)
+
+    @property
+    def secondary_attribute_value(self):
+        return Decimal(self.character.attributes.get(attribute=self.skill.secondary_attribute).total)
+
+    @property
+    def time_to_next_level(self):
+        if self.level == 5:
+            return 0
+        seconds = (self.sp_to_next_level - self.skillpoints) / self.skill.points_per_second(
+            self.primary_attribute_value,
+            self.secondary_attribute_value
+        )
+        return str(timedelta(seconds=int(seconds)))
+
+    @property
     def progress(self):
         if self.level == 5:
             return Decimal(100)
@@ -159,6 +178,10 @@ class AttributeValues(models.Model):
     )
     base = models.IntegerField("Base")
     bonus = models.IntegerField("Bonus")
+
+    @property
+    def total(self):
+        return self.base + self.bonus
 
     def __unicode__(self):
         return u"%s - %s: %d" % (self.character, self.attribute.name, (self.base + self.bonus))
