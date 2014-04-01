@@ -59,7 +59,7 @@ class AddCharacter(LoginRequiredMixin, JSONResponseMixin, TemplateView):
                     'skillpoints': 0
                 }
             )
-            char.update_attributes()
+            char._update_attributes()
         return redirect(reverse('characters:manage'))
 
 
@@ -76,9 +76,8 @@ class UpdateCharacter(UserIsOwnerMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         character = self.get_object()
-        character.update_attributes()
-        character.update_skills()
-        messages.success(request, '%s updated successfully' % character.name)
+        message = character.update_character_sheet()
+        messages.add_message(request, message['status'], message['text'])
         return redirect(reverse('characters:manage'))
 
 

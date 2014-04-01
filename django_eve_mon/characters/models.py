@@ -1,6 +1,7 @@
 from decimal import Decimal
-from datetime import timedelta
+from datetime import timedelta, datetime
 
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import models
 from evelink.account import Account
@@ -33,7 +34,10 @@ class ApiKey(models.Model):
         return account.characters().result
 
     def __unicode__(self):
-        return self.key_id
+        return "%s (%s)" % (
+            self.key_id,
+            self.characters_added.first().name
+        )
 
 
 class Character(models.Model):
@@ -56,6 +60,10 @@ class Character(models.Model):
         max_length=255
     )
     skillpoints = models.IntegerField('Skillpoints')
+    char_sheet_expires = models.DateTimeField(
+        'Character Sheet Expiry',
+        null=True
+    )
 
     @property
     def char_api(self):
@@ -65,13 +73,36 @@ class Character(models.Model):
     def char_sheet(self):
         return self.char_api.character_sheet().result
 
+    @property
+    def char_sheet_expired(self):
+        return self.char_sheet_expires < datetime.utcnow()
+
     def get_absolute_url(self):
         return reverse('characters:detail', args=[str(self.id)])
 
     def get_fetch_url(self):
         return reverse('characters:fetch', args=[str(self.id)])
 
-    def update_attributes(self):
+    def update_character_sheet(self):
+        message = {
+            'status': messages.INFO,
+            'text': '%s\'s character sheet cached until %s' % (
+                self.name,
+                self.char_sheet_expires
+            )
+        }
+        if not self.char_sheet_expired:
+            return message
+        if self._update_attributes() and self._update_skills():
+            message['status'] = messages.SUCCESS
+            message['text'] = 'Updated %s\'s character sheet successfully' % \
+                self.name
+            return message
+        message['status'] = messages.ERROR
+        message['text'] = 'Failed to update %s\'s character sheet' % self.name
+        return message
+
+    def _update_attributes(self):
         sheet_attributes = self.char_sheet['attributes']
         for attr in sheet_attributes:
             attribute = Attribute.objects.get(name=attr)
@@ -88,8 +119,10 @@ class Character(models.Model):
             if bonus_val is not None:
                 attr_value.bonus = bonus_val['value']
             attr_value.save()
+        # TODO: Catch exception and return False
+        return True
 
-    def update_skills(self):
+    def _update_skills(self):
         skills = self.char_sheet['skills']
         for skill in skills:
             skl = Skill.objects.get(id=skill['id'])
@@ -104,6 +137,8 @@ class Character(models.Model):
             skl_lvl.skillpoints = skill['skillpoints']
             skl_lvl.level = skill['level']
             skl_lvl.save()
+        # TODO: Catch exception and return False
+        return True
 
     def is_owner(self, user):
         return self.user == user
