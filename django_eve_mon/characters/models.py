@@ -7,6 +7,7 @@ from django.db import models
 from evelink.account import Account
 from evelink.api import API
 from evelink.char import Char
+from characters.utils import SkillRelatedModel, points_per_second
 from core.utils import DjangoCache
 
 from skills.models import Attribute
@@ -141,39 +142,13 @@ class Character(models.Model):
         return self.name
 
 
-class SkillTrained(models.Model):
-    character = models.ForeignKey(
-        'Character',
-        verbose_name='Character',
-        on_delete=models.CASCADE,
-        related_name='skills_known'
-    )
-    skill = models.ForeignKey(
-        'skills.Skill',
-        verbose_name='Skill',
-        on_delete=models.CASCADE,
-        related_name='characters_with_skill'
-    )
-    skillpoints = models.IntegerField('Skillpoints')
-    level = models.IntegerField('Level')
-
-    @property
-    def sp_to_next_level(self):
-        return self.skill.skillpoints[self.level + 1] if self.level < 5 else self.skill.skillpoints[5]
-
-    @property
-    def primary_attribute_value(self):
-        return Decimal(self.character.attributes.get(attribute=self.skill.primary_attribute).total)
-
-    @property
-    def secondary_attribute_value(self):
-        return Decimal(self.character.attributes.get(attribute=self.skill.secondary_attribute).total)
+class SkillTrained(SkillRelatedModel):
 
     @property
     def time_to_next_level(self):
         if self.level == 5:
             return 0
-        seconds = (self.sp_to_next_level - self.skillpoints) / self.skill.points_per_second(
+        seconds = (self.sp_to_next_level - self.skillpoints) / points_per_second(
             self.primary_attribute_value,
             self.secondary_attribute_value
         )
@@ -224,17 +199,16 @@ class AttributeValues(models.Model):
         verbose_name_plural = 'Attribute Values'
 
 
-class SkillQueue(models.Model):
-    character = models.ForeignKey(
-        'Character',
-        verbose_name='Character',
-        on_delete=models.CASCADE,
-        related_name='skill_queue'
-    )
-    skill = models.ForeignKey(
-        'skills.Skill',
-        verbose_name='Skill',
-        on_delete=models.CASCADE,
-        related_name='in_queues'
-    )
+class SkillQueue(SkillRelatedModel):
     position = models.IntegerField('Position')
+    start_sp = models.IntegerField('Start Skillpoints')
+    end_sp = models.IntegerField('End Skillpoints')
+    start_time = models.DateTimeField('Start Time')
+    end_time = models.DateTimeField('End Time')
+
+    @property
+    def current_sp(self):
+        seconds_left = (self.end_time - datetime.utcnow()).total_seconds()
+        train_rate = points_per_second(self.primary_attribute_value, self.secondary_attribute_value)
+        return self.end_sp - (seconds_left * train_rate)
+

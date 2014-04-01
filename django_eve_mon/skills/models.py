@@ -57,9 +57,6 @@ class Skill(models.Model):
             5: 256000 * self.rank,
         }
 
-    def points_per_second(self, primary_attribute, secondary_attribute):
-        return (primary_attribute + (secondary_attribute / 2)) / 60
-
     def __unicode__(self):
         return self.name
 
