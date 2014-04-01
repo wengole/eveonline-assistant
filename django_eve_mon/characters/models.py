@@ -38,7 +38,7 @@ class ApiKey(models.Model):
         return account.characters().result
 
     def __unicode__(self):
-        return "%s (%s)" % (
+        return u'%s (%s)' % (
             self.key_id,
             self.characters_added.first().name
         )
@@ -90,6 +90,13 @@ class Character(models.Model):
         message['text'] = 'Failed to update %s\'s character sheet' % self.name
         return message
 
+    def update_skill_queue(self):
+        message = {
+            'status': messages.SUCCESS,
+            'text': 'Updated %s\'s character sheet successfully' % self.name
+        }
+
+
     def _update_attributes(self):
         sheet_attributes = self.char_sheet['attributes']
         for attr in sheet_attributes:
@@ -138,18 +145,18 @@ class Character(models.Model):
 class SkillTrained(models.Model):
     character = models.ForeignKey(
         'Character',
-        verbose_name="Character",
+        verbose_name='Character',
         on_delete=models.CASCADE,
         related_name='skills_known'
     )
     skill = models.ForeignKey(
         'skills.Skill',
-        verbose_name="Skill",
+        verbose_name='Skill',
         on_delete=models.CASCADE,
         related_name='characters_with_skill'
     )
-    skillpoints = models.IntegerField("Skillpoints")
-    level = models.IntegerField("Level")
+    skillpoints = models.IntegerField('Skillpoints')
+    level = models.IntegerField('Level')
 
     @property
     def sp_to_next_level(self):
@@ -184,23 +191,23 @@ class SkillTrained(models.Model):
         return (start / end) * 100
 
     def __unicode__(self):
-        return u"%s - %s L%d" % (self.character.name, self.skill.name, self.level)
+        return u'%s - %s L%d' % (self.character.name, self.skill.name, self.level)
 
 
 class AttributeValues(models.Model):
     character = models.ForeignKey(
         'Character',
-        verbose_name="Character",
+        verbose_name='Character',
         on_delete=models.CASCADE,
         related_name='attributes'
     )
     attribute = models.ForeignKey(
         'skills.Attribute',
-        verbose_name="Attribute",
+        verbose_name='Attribute',
         on_delete=models.CASCADE
     )
-    base = models.IntegerField("Base")
-    bonus = models.IntegerField("Bonus")
+    base = models.IntegerField('Base')
+    bonus = models.IntegerField('Bonus')
 
     @property
     def total(self):
