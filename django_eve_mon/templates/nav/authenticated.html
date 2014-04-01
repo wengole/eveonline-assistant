@@ -3,6 +3,12 @@
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Characters <b class="caret"></b></a>
     <ul class="dropdown-menu">
       <li class="dropdown-header">Characters</li>
+      {% for character in user.characters.all %}
+        <li><a href="{{ character.get_absolute_url }}">{{ character.name }}</a></li>
+        {% if forloop.last %}
+        <li class="divider"></li>
+        {% endif %}
+      {% endfor %}
       <li><a href="{% url "characters:add" %}">Add Character</a></li>
       <li><a href="{% url "characters:manage" %}">Manage Characters</a></li>
       <li class="divider"></li>
