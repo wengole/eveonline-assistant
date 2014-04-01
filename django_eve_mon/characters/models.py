@@ -64,10 +64,6 @@ class Character(models.Model):
         max_length=255
     )
     skillpoints = models.IntegerField('Skillpoints')
-    char_sheet_expires = models.DateTimeField(
-        'Character Sheet Expiry',
-        null=True
-    )
 
     @property
     def char_api(self):
@@ -77,10 +73,6 @@ class Character(models.Model):
     def char_sheet(self):
         return self.char_api.character_sheet().result
 
-    @property
-    def char_sheet_expired(self):
-        return self.char_sheet_expires < datetime.utcnow()
-
     def get_absolute_url(self):
         return reverse('characters:detail', args=[str(self.id)])
 
@@ -89,18 +81,10 @@ class Character(models.Model):
 
     def update_character_sheet(self):
         message = {
-            'status': messages.INFO,
-            'text': '%s\'s character sheet cached until %s' % (
-                self.name,
-                self.char_sheet_expires
-            )
+            'status': messages.SUCCESS,
+            'text': 'Updated %s\'s character sheet successfully' % self.name
         }
-        if not self.char_sheet_expired:
-            return message
         if self._update_attributes() and self._update_skills():
-            message['status'] = messages.SUCCESS
-            message['text'] = 'Updated %s\'s character sheet successfully' % \
-                self.name
             return message
         message['status'] = messages.ERROR
         message['text'] = 'Failed to update %s\'s character sheet' % self.name
