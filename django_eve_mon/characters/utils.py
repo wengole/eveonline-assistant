@@ -18,15 +18,14 @@ class SkillRelatedModel(models.Model):
         'characters.Character',
         verbose_name='Character',
         on_delete=models.CASCADE,
-        related_name='skills_known'
     )
     skill = models.ForeignKey(
         'skills.Skill',
         verbose_name='Skill',
         on_delete=models.CASCADE,
     )
-    skillpoints = models.IntegerField('Skillpoints')
-    level = models.IntegerField('Level')
+    skillpoints = models.IntegerField('Skillpoints', default=0)
+    level = models.IntegerField('Level', default=0)
 
     @property
     def sp_to_next_level(self):
@@ -39,3 +38,6 @@ class SkillRelatedModel(models.Model):
     @property
     def secondary_attribute_value(self):
         return Decimal(self.character.attributes.get(attribute=self.skill.secondary_attribute).total)
+
+    class Meta:
+        abstract = True

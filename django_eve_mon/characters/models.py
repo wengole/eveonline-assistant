@@ -143,7 +143,6 @@ class Character(models.Model):
 
 
 class SkillTrained(SkillRelatedModel):
-
     @property
     def time_to_next_level(self):
         if self.level == 5:
