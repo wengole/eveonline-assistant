@@ -57,6 +57,7 @@ class Common(Configuration):
         'users',
         'skills',
         'characters',
+        'plans',
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
