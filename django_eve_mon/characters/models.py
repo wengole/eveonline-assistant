@@ -4,6 +4,7 @@ from datetime import timedelta, datetime
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.timezone import utc, now
 from evelink.account import Account
 from evelink.api import API
 from evelink.char import Char
@@ -94,8 +95,25 @@ class Character(models.Model):
     def update_skill_queue(self):
         message = {
             'status': messages.SUCCESS,
-            'text': 'Updated %s\'s character sheet successfully' % self.name
+            'text': 'Updated %s\'s skill queue successfully' % self.name
         }
+        skill_queue = self.char_api.skill_queue().result
+        SkillQueue.objects.filter(character=self).delete()
+        for queued in skill_queue:
+            sq = SkillQueue.objects.create(
+                character=self,
+                skill=Skill.objects.get(id=queued['type_id']),
+                start_time=now(),
+                end_time=now(),
+                level=queued['level'],
+                position=queued['position'],
+                start_sp=queued['start_sp'],
+                end_sp=queued['end_sp'],
+            )
+            sq.end_time = datetime.utcfromtimestamp(queued['end_ts']).replace(tzinfo=utc)
+            sq.start_time = datetime.utcfromtimestamp(queued['start_ts']).replace(tzinfo=utc)
+            sq.save()
+        return message
 
     def _update_attributes(self):
         sheet_attributes = self.char_sheet['attributes']
@@ -199,15 +217,17 @@ class AttributeValues(models.Model):
 
 
 class SkillQueue(SkillRelatedModel):
-    position = models.IntegerField('Position')
-    start_sp = models.IntegerField('Start Skillpoints')
-    end_sp = models.IntegerField('End Skillpoints')
+    position = models.IntegerField('Position', default=0)
+    start_sp = models.IntegerField('Start Skillpoints', default=0)
+    end_sp = models.IntegerField('End Skillpoints', default=0)
     start_time = models.DateTimeField('Start Time')
     end_time = models.DateTimeField('End Time')
 
     @property
     def current_sp(self):
-        seconds_left = (self.end_time - datetime.utcnow()).total_seconds()
+        if self.position != 0:
+            return self.character.skilltrained_set.get(skill=self.skill).skillpoints
+        seconds_left = Decimal((self.end_time - datetime.utcnow().replace(tzinfo=utc)).total_seconds())
         train_rate = points_per_second(self.primary_attribute_value, self.secondary_attribute_value)
-        return self.end_sp - (seconds_left * train_rate)
+        return int(self.end_sp - (seconds_left * train_rate))
 
