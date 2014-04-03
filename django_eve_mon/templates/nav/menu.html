@@ -1,0 +1,32 @@
+{% load menu %}{% generate_menu %}
+<ul class="nav navbar-nav">
+  {% for name, items in menus.iteritems %}
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ name }} <b class="caret"></b></a>
+      <ul class="dropdown-menu">
+        {% for item in items %}
+          <li class="{{ item.classes }}">
+            {% if item.url %}
+              <a href="{{ item.url }}">
+            {% endif %}
+              {{ item.title }}
+            {% if item.url %}
+              </a>
+            {% endif %}
+          </li>
+          {% for child in item.children %}
+            <li class="{{ item.classes }}">
+              {% if item.url %}
+                <a href="{{ item.url }}">
+              {% endif %}
+              {{ item.title }}
+              {% if item.url %}
+                </a>
+              {% endif %}
+            </li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </li>
+  {% endfor %}
+</ul>
