@@ -31,13 +31,5 @@ class SkillRelatedModel(models.Model):
     def sp_to_next_level(self):
         return self.skill.skillpoints[self.level + 1] if self.level < 5 else self.skill.skillpoints[5]
 
-    @property
-    def primary_attribute_value(self):
-        return Decimal(self.character.attributes.get(attribute=self.skill.primary_attribute).total)
-
-    @property
-    def secondary_attribute_value(self):
-        return Decimal(self.character.attributes.get(attribute=self.skill.secondary_attribute).total)
-
     class Meta:
         abstract = True

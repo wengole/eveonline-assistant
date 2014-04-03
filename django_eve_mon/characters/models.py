@@ -4,6 +4,7 @@ from datetime import timedelta, datetime
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.core.cache import cache
 from django.utils.timezone import utc, now
 from evelink.account import Account
 from evelink.api import API
@@ -74,6 +75,14 @@ class Character(models.Model):
     @property
     def char_sheet(self):
         return self.char_api.character_sheet().result
+
+    def attribute_value(self, attr):
+        cache_key = '%s-%s' % (self.name, attr.name)
+        value = cache.get(cache_key)
+        if value is None:
+            value = Decimal(self.attributes.get(attribute=attr).total)
+            cache.set(cache_key, value)
+        return value
 
     def get_absolute_url(self):
         return reverse('characters:detail', args=[str(self.id)])
@@ -169,8 +178,8 @@ class SkillTrained(SkillRelatedModel):
         if self.level == 5:
             return 0
         seconds = (self.sp_to_next_level - self.skillpoints) / points_per_second(
-            self.primary_attribute_value,
-            self.secondary_attribute_value
+            self.character.attribute_value(self.skill.primary_attribute),
+            self.character.attribute_value(self.skill.secondary_attribute)
         )
         return str(timedelta(seconds=int(seconds)))
 
