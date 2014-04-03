@@ -15,12 +15,12 @@
             {% endif %}
           </li>
           {% for child in item.children %}
-            <li class="{{ item.classes }}">
-              {% if item.url %}
-                <a href="{{ item.url }}">
+            <li class="{{ child.classes }}">
+              {% if child.url %}
+                <a href="{{ child.url }}">
               {% endif %}
-              {{ item.title }}
-              {% if item.url %}
+                {{ child.title }}
+              {% if child.url %}
                 </a>
               {% endif %}
             </li>
