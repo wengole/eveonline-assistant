@@ -16,6 +16,13 @@
            class="panel-collapse collapse{% if forloop.first %} in{% endif %}">
         <div class="panel-body">
           <table class="table table-striped table-hover">
+            <thead>
+              <th>Skill</th>
+              <th class="hidden-xs hidden-sm">Progress to next level</th>
+              <th>Time to next level</th>
+              <th class="hidden-xs hidden-sm">Skill points</th>
+              <th>Level</th>
+            </thead>
             <tbody>
             {% for skill_known in skills %}
               {% with skill=skill_known.skill %}
@@ -26,14 +33,15 @@
                     success
                   {% endif %}">
                   <td>{{ skill.name }} ({{ skill.rank }}x)</td>
-                  <td>
+                  <td class="hidden-xs hidden-sm">
                     <div class="progress">
                       <div class="progress-bar" style="width: {{ skill_known.progress }}%;"></div>
                     </div>
                   </td>
                   <td>{{ skill_known.time_to_next_level }}</td>
-                  <td>{{ skill_known.skillpoints|intcomma }} / {{ skill_known.sp_to_next_level|intcomma }}</td>
-                  <td style="text-align: right;">{{ skill_known.level }}</td>
+                  <td class="hidden-xs hidden-sm">{{ skill_known.skillpoints|intcomma }}
+                    / {{ skill_known.sp_to_next_level|intcomma }}</td>
+                  <td style="text-align: center;"><span class="badge">{{ skill_known.level }}</span></td>
                 </tr>
               {% endwith %}
             {% endfor %}
