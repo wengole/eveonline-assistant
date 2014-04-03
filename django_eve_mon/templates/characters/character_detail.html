@@ -15,7 +15,7 @@
         </div>
         <div class="col-sm-8">
           <dl class="dl-horizontal">
-            {% for attribute in character.attributes.all %}
+            {% for attribute in character.attributes.select_related.all %}
               <dt>{{ attribute.attribute.name|capfirst }}</dt>
               <dd>{{ attribute.base }} + {{ attribute.bonus }}</dd>
             {% endfor %}

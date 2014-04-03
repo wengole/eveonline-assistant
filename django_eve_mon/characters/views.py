@@ -94,8 +94,9 @@ class CharacterDetail(UserIsOwnerMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         character = self.get_object()
-        skills_list = character.skilltrained_set.order_by('skill__group',
-                                                      'skill__name')
+        skills_list = character.skilltrained_set.select_related().order_by(
+            'skill__group',
+            'skill__name')
         groups = OrderedDict()
         for skill in skills_list:
             if skill.skill.group.name not in groups:
