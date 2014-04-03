@@ -42,11 +42,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navbar-collapse">
-      {% if request.user.is_authenticated %}
-        {% include "nav/menu.html" %}
-      {% else %}
-        {% include "nav/no_auth.html" %}
-      {% endif %}
+      {% include "nav/top-nav.html" %}
       <!-- /.navbar-collapse -->
     </div>
   <!-- /.container-fluid -->
