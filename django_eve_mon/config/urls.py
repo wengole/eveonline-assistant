@@ -28,4 +28,5 @@ urlpatterns = patterns('',
     # Your stuff: custom urls go here
     url(r'^skills/', include('skills.urls', namespace='skills')),
     url(r'^characters/', include('characters.urls', namespace='characters')),
+    url(r'^plans/', include('plans.urls', namespace='plans'))
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

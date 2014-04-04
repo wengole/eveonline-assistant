@@ -1,3 +1,12 @@
-from django.shortcuts import render
+from braces.views import LoginRequiredMixin
+from django.views.generic import CreateView, UpdateView, DetailView
 
-# Create your views here.
+
+class AddPlan(LoginRequiredMixin, CreateView):
+    pass
+
+class ManagePlans(LoginRequiredMixin, UpdateView):
+    pass
+
+class PlanDetail(LoginRequiredMixin, DetailView):
+    pass
