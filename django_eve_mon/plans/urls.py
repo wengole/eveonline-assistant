@@ -15,7 +15,7 @@ urlpatterns = patterns(
         name='manage'
     ),
     url(
-        regex=r'^manage/(?P<Plan_id>\d+)/$',
+        regex=r'^manage/(?P<plan_id>\d+)/$',
         view=views.PlanDetail.as_view(pk_url_kwarg='plan_id'),
         name='detail'
     ),

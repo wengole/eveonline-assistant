@@ -3,7 +3,7 @@ Forms for the Plans app
 """
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Button, Fieldset
+from crispy_forms.layout import Layout, Submit, Button, Fieldset, Reset
 from django.forms import ModelForm
 from .models import Plan
 
@@ -26,8 +26,8 @@ class PlanForm(ModelForm):
                 'character'
             ),
             FormActions(
-                Submit('save', 'Save changes'),
-                Button('cancel', 'Cancel')
+                Submit('save', 'Add', css_class='btn btn-success'),
+                Reset('reset', 'Reset', css_class='btn btn-default')
             )
         )
 

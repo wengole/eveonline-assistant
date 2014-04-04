@@ -10,6 +10,8 @@ class AddPlan(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        return super(AddPlan, self).form_valid(form)
+
 
 class ManagePlans(LoginRequiredMixin, UpdateView):
     model = Plan
