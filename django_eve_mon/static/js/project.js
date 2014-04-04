@@ -43,6 +43,7 @@ $(getCharsBtn).on('click', function () {
 });
 
 $(document).ready(function(){
+  $('select').select2();
   $(characterSelect).select2({
     data: [{id: 1, text: 'foo'}],
     placeholder: "Select character(s)",

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add New Plan{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1>{% block header %}Plans{% endblock %}</h1>
+
+        {% crispy form %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
