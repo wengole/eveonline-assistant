@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 
 
@@ -12,6 +13,14 @@ class Plan(models.Model):
         verbose_name='Character',
         on_delete=models.CASCADE
     )
+    user = models.ForeignKey(
+        'users.User',
+        verbose_name='User',
+        on_delete=models.CASCADE
+    )
+
+    def get_absolute_url(self):
+        return reverse('plans:detail', args=[str(self.id)])
 
     def __unicode__(self):
         return '%s: %s' % (self.character, self.name or 'Plan')
