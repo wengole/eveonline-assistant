@@ -71,7 +71,7 @@ Menu.add_item(
         url='#',
         children=characters_menu,
         classes='dropdown',
-        check=lambda request: request.user.is_authenticated()
+        check=lambda r: r.user.is_authenticated()
     )
 
 )
