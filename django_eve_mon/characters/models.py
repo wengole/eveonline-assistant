@@ -44,6 +44,8 @@ class ApiKey(models.Model):
         return u'%s (%s)' % (
             self.key_id,
             self.characters_added.first().name
+            if self.characters_added.first()
+            is not None else 'No chars added'
         )
 
 

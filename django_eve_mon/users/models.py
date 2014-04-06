@@ -9,7 +9,7 @@ class User(AbstractUser):
 
         :return: :rtype: bool
         """
-        return len(self.api_keys) > 0
+        return self.api_keys.count() > 0
 
     def __unicode__(self):
         return self.username

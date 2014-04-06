@@ -58,6 +58,12 @@ def characters_menu(request):
     )
     menu.append(
         MenuItem(
+            title='Add API Key',
+            url=reverse('characters:add-api')
+        )
+    )
+    menu.append(
+        MenuItem(
             title='Manage API Keys',
             url=reverse('characters:manage-apis')
         )

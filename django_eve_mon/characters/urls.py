@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from .views import AddCharacter, ManageCharacters, ManageApiKeys, CharacterDetail, UpdateCharacter
+from .views import AddCharacter, ManageCharacters, ManageApiKeys, CharacterDetail, UpdateCharacter, AddApiKey
 
 urlpatterns = patterns(
     '',
@@ -23,6 +23,11 @@ urlpatterns = patterns(
         regex=r'^manage/(?P<char_id>\d+)/$',
         view=CharacterDetail.as_view(pk_url_kwarg='char_id'),
         name='detail'
+    ),
+    url(
+        regex=r'^apis/add$',
+        view=AddApiKey.as_view(),
+        name='add-api'
     ),
     url(
         regex=r'^apis/manage/$',
