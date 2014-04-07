@@ -27,11 +27,11 @@ urlpatterns = patterns(
     url(
         regex=r'^apis/add$',
         view=AddApiKey.as_view(),
-        name='add-api'
+        name='add_api'
     ),
     url(
         regex=r'^apis/manage/$',
         view=ManageApiKeys.as_view(),
-        name='manage-apis'
+        name='manage_apis'
     ),
 )
