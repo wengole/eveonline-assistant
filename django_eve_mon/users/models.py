@@ -11,5 +11,13 @@ class User(AbstractUser):
         """
         return self.api_keys.count() > 0
 
+    def has_disabled_characters(self):
+        """
+        Does this user have characters that aren't yet added
+
+        :return: :rtype: bool
+        """
+        return self.characters.filter(enabled=False).count() > 0
+
     def __unicode__(self):
         return self.username

@@ -1,9 +1,9 @@
-from crispy_forms.bootstrap import FormActions, FieldWithButtons
+from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Submit, Reset, HTML, \
-    Field, Div, Button
+from crispy_forms.layout import Layout, Fieldset, Submit, Field, Button
 from django import forms
 from django.forms import ModelForm
+from evelink.api import APIError
 
 from .models import ApiKey
 
@@ -13,8 +13,9 @@ class ApiKeyForm(ModelForm):
     Simple form to add a new API Key
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         super(ApiKeyForm, self).__init__(*args, **kwargs)
+        self.user = user
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-lg-2'
@@ -27,9 +28,24 @@ class ApiKeyForm(ModelForm):
             ),
             FormActions(
                 Submit('save', 'Add', css_class='btn btn-success'),
-                Reset('reset', 'Reset', css_class='btn btn-default')
             )
         )
+
+    def clean(self):
+        cleaned_data = super(ApiKeyForm, self).clean()
+        apikey = ApiKey(
+            key_id=cleaned_data.get('key_id'),
+            verification_code=cleaned_data.get('verification_code'),
+            user=self.user
+        )
+        try:
+            apikey.get_characters()
+        except APIError as e:
+            raise forms.ValidationError(
+                '%s' % e.message,
+                'api-error'
+            )
+        return cleaned_data
 
     class Meta:
         """

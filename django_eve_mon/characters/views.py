@@ -1,13 +1,14 @@
 from collections import OrderedDict
 
-from braces.views import JSONResponseMixin, LoginRequiredMixin
+from braces.views import LoginRequiredMixin
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
-from django.views.generic import TemplateView, ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, \
+    FormView
+
 from characters.forms import ApiKeyForm, CharacterForm
 from .utils import UserIsOwnerMixin
-
 from .models import ApiKey, Character
 
 
@@ -93,6 +94,11 @@ class UpdateCharacter(UserIsOwnerMixin, DetailView):
 class AddApiKey(LoginRequiredMixin, CreateView):
     model = ApiKey
     form_class = ApiKeyForm
+
+    def get_form_kwargs(self):
+        kwargs = super(AddApiKey, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def form_valid(self, form):
         form.instance.user = self.request.user
