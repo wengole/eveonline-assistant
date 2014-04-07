@@ -11,7 +11,7 @@ class ApiKeyAdmin(admin.ModelAdmin):
 
 
 class CharacterAdmin(admin.ModelAdmin):
-    list_display = ('id', 'apikey', 'user', 'name', 'skillpoints')
+    list_display = ('id', 'enabled', 'apikey', 'user', 'name', 'skillpoints')
     list_filter = ()
     search_fields = ()
     date_hierarchy = ''
