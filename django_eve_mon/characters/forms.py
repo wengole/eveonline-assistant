@@ -1,11 +1,12 @@
 from crispy_forms.bootstrap import FormActions
+
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Submit, Field, Button
+from crispy_forms.layout import Layout, Fieldset, Submit, Field, HTML
 from django import forms
 from django.forms import ModelForm
 from evelink.api import APIError
 
-from .models import ApiKey
+from .models import ApiKey, Character
 
 
 class ApiKeyForm(ModelForm):
@@ -47,6 +48,23 @@ class ApiKeyForm(ModelForm):
             )
         return cleaned_data
 
+    def save(self, commit=True):
+        instance = super(ApiKeyForm, self).save(commit)
+        characters = instance.get_characters()
+        for cid in characters.keys():
+            char, _ = Character.objects.get_or_create(
+                id=cid,
+                apikey=instance,
+                defaults={
+                    'user': self.user,
+                    'name': characters[cid]['name'],
+                    'skillpoints': 0,
+                    'enabled': False
+                }
+            )
+            char._update_attributes()
+        return instance
+
     class Meta:
         """
         Form settings
@@ -79,29 +97,17 @@ class CharacterForm(forms.Form):
                 Field('char_ids', placeholder='Select characters')
             ),
             FormActions(
-                Button(
+                Submit(
                     'add-char',
                     'Add characters',
                     css_class='btn btn-success',
                 ),
-                Button(
-                    'add-api',
-                    'Add API Key',
-                    css_class='btn btn-info'
+                HTML(
+                    '<a href="{% url "characters:add_api" %}" class="btn '
+                    'btn-info">Add API Key</a>'
                 ),
             )
         )
-        if not user.has_disabled_characters():
-            self.helper['char_ids'].update_attributes(
-                placeholder='No disabled characters found. Add an API Key',
-                disabled='disabled'
-            )
-            self.helper.layout[1][0] = Button(
-                'add-char',
-                'Add characters',
-                css_class='btn btn-success',
-                disabled='disabled'
-            )
 
     class Meta:
         """
