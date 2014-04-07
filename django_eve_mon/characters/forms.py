@@ -33,6 +33,13 @@ class ApiKeyForm(ModelForm):
         )
 
     def clean(self):
+        """
+        Check the API Key is actually valid with CCP
+
+        :return: cleaned data as usual
+        :rtype: dict
+        :raise forms.ValidationError: Passing through the APIError from CCP
+        """
         cleaned_data = super(ApiKeyForm, self).clean()
         apikey = ApiKey(
             key_id=cleaned_data.get('key_id'),
