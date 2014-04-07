@@ -10,7 +10,9 @@
         <h1>{% block header %}{% endblock %}</h1>
 
         <div class="well">
-          {% crispy form %}
+          {% block form %}
+            {% crispy form %}
+          {% endblock %}
         </div>
       </div>
     </div>

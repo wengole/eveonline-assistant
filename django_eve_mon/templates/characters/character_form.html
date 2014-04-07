@@ -1,5 +1,20 @@
 {% extends "base_form.html" %}
 
-{% block title %}Add New API Key{% endblock %}
+{% block title %}Add New Character{% endblock %}
 
-{% block header %}API Key{% endblock %}
+{% block header %}Characters{% endblock %}
+
+{% block form %}
+{% if not user.has_disabled_characters %}
+  <div class="alert alert-block alert-danger">
+    <h4 class="alert-heading">All characters enabled
+    </h4>
+    <ul>
+      <a href="{% url "characters:add_api" %}">Add a new API Key</a>
+      to add more characters
+    </ul>
+  </div>
+{% else %}
+  {{ block.super }}
+{% endif %}
+{% endblock %}

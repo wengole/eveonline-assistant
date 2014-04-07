@@ -55,7 +55,7 @@ class ApiKeyForm(ModelForm):
         exclude = ['user', ]
 
 
-class CharacterForm(ModelForm):
+class CharacterForm(forms.Form):
     """
     Form to add character with a field to select API Key or add new
     """
@@ -67,16 +67,15 @@ class CharacterForm(ModelForm):
         self.helper.label_class = 'col-lg-2'
         self.helper.field_class = 'col-lg-8'
 
-        self.fields['char_ids'] = forms.MultipleChoiceField()
-        self.fields['apikey'] = forms.ModelChoiceField(
-            queryset=user.api_keys.all(),
-            empty_label=''
+        self.fields['char_ids'] = forms.ModelMultipleChoiceField(
+            queryset=user.characters.filter(enabled=False),
+            label='Characters'
         )
+        self.fields['char_ids'].help_text = ''
 
         self.helper.layout = Layout(
             Fieldset(
                 'Add new character(s)',
-                Field('apikey', placeholder='Select API Key'),
                 Field('char_ids', placeholder='Select characters')
             ),
             FormActions(
@@ -85,22 +84,16 @@ class CharacterForm(ModelForm):
                     'Add characters',
                     css_class='btn btn-success',
                 ),
-                HTML(
-                    '<a href="{% url "characters:add_api" %}"'
-                    ' class="btn btn-info">Add API Key</a>',
+                Button(
+                    'add-api',
+                    'Add API Key',
+                    css_class='btn btn-info'
                 ),
-                Reset('reset', 'Reset', css_class='btn btn-warning'),
             )
         )
-        if user.has_apikeys():
-            pass
-        else:
-            self.helper['apikey'].update_attributes(
-                placeholder='No API Keys',
-                disabled='disabled'
-            )
+        if not user.has_disabled_characters():
             self.helper['char_ids'].update_attributes(
-                placeholder='Add an API Key',
+                placeholder='No disabled characters found. Add an API Key',
                 disabled='disabled'
             )
             self.helper.layout[1][0] = Button(
@@ -109,7 +102,6 @@ class CharacterForm(ModelForm):
                 css_class='btn btn-success',
                 disabled='disabled'
             )
-
 
     class Meta:
         """

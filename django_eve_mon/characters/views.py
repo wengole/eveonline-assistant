@@ -64,14 +64,15 @@ from .models import ApiKey, Character
 #             char._update_attributes()
 #         return redirect(reverse('characters:manage'))
 
-class AddCharacter(LoginRequiredMixin, CreateView):
-    model = Character
+class AddCharacter(LoginRequiredMixin, FormView):
     form_class = CharacterForm
+    template_name = 'characters/character_form.html'
 
     def get_form_kwargs(self):
         kwargs = super(AddCharacter, self).get_form_kwargs()
         kwargs.update({'user': self.request.user})
         return kwargs
+
 
 class ManageCharacters(LoginRequiredMixin, ListView):
     model = Character
