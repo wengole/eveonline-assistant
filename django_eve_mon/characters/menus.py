@@ -9,7 +9,10 @@ def characters(request):
         MenuItem(
             title=character.name,
             url=character.get_absolute_url()
-        ) for character in Character.objects.filter(user=request.user)
+        ) for character in Character.objects.filter(
+            user=request.user,
+            enabled=True
+        )
     ]
 
 

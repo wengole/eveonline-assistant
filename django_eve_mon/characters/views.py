@@ -3,6 +3,7 @@ from collections import OrderedDict
 from braces.views import LoginRequiredMixin
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
+from django.http import Http404
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, \
     FormView
@@ -11,58 +12,6 @@ from .forms import ApiKeyForm, CharacterForm
 from .utils import UserIsOwnerMixin
 from .models import ApiKey, Character
 
-
-# class AddCharacter(LoginRequiredMixin, JSONResponseMixin, TemplateView):
-#     template_name = "characters/character_add.html"
-#     content_type = "text/html"
-#
-#     def post(self, request):
-#         self.content_type = "application/json"
-#
-#         key_id = int(request.POST.get('keyid'))
-#         vcode = request.POST.get('vcode')
-#         char_ids = request.POST.get('characters')
-#         user = request.user
-#
-#         api_key, _ = ApiKey.objects.get_or_create(
-#             key_id=key_id,
-#             verification_code=vcode,
-#             defaults={
-#                 'user': user
-#             }
-#         )
-#
-#         if char_ids is not None:
-#             return self.add_characters(
-#                 api_key,
-#                 [int(x) for x in char_ids.split(',')]
-#             )
-#
-#         characters = api_key.get_characters()
-#         context = {
-#             'data': [
-#                 {
-#                     'id': x,
-#                     'text': characters[x]['name']
-#                 } for x in characters.keys()
-#             ],
-#         }
-#         return self.render_json_response(context)
-#
-#     def add_characters(self, api_key, char_ids):
-#         characters = api_key.get_characters()
-#         for cid in char_ids:
-#             char, _ = Character.objects.get_or_create(
-#                 id=cid,
-#                 apikey=api_key,
-#                 defaults={
-#                     'user': self.request.user,
-#                     'name': characters[cid]['name'],
-#                     'skillpoints': 0
-#                 }
-#             )
-#             char._update_attributes()
-#         return redirect(reverse('characters:manage'))
 
 class AddCharacter(LoginRequiredMixin, FormView):
     form_class = CharacterForm
@@ -73,12 +22,22 @@ class AddCharacter(LoginRequiredMixin, FormView):
         kwargs.update({'user': self.request.user})
         return kwargs
 
+    def form_valid(self, form):
+        for character in form.cleaned_data['char_ids']:
+            character.enabled = True
+            character.save()
+        self.success_url = form.cleaned_data['char_ids'][0].get_absolute_url()
+        return super(AddCharacter, self).form_valid(form)
+
 
 class ManageCharacters(LoginRequiredMixin, ListView):
     model = Character
 
     def get_queryset(self):
-        queryset = self.model.objects.filter(user=self.request.user)
+        queryset = self.model.objects.filter(
+            user=self.request.user,
+            enabled=True
+        )
         return queryset
 
 
@@ -87,6 +46,8 @@ class UpdateCharacter(UserIsOwnerMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         character = self.get_object()
+        if not character.enabled:
+            raise Http404
         message = character.update_character_sheet()
         messages.add_message(request, message['status'], message['text'])
         return redirect(reverse_lazy('characters:manage'))
@@ -95,7 +56,7 @@ class UpdateCharacter(UserIsOwnerMixin, DetailView):
 class AddApiKey(LoginRequiredMixin, CreateView):
     model = ApiKey
     form_class = ApiKeyForm
-    success_url = reverse_lazy('characters:manage_apis')
+    success_url = reverse_lazy('characters:add')
 
     def get_form_kwargs(self):
         kwargs = super(AddApiKey, self).get_form_kwargs()
@@ -120,6 +81,8 @@ class CharacterDetail(UserIsOwnerMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         character = self.get_object()
+        if not character.enabled:
+            raise Http404
         skills_list = character.skilltrained_set.select_related().order_by(
             'skill__group',
             'skill__name')
