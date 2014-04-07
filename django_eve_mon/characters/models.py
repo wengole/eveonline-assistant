@@ -69,6 +69,7 @@ class Character(models.Model):
         max_length=255
     )
     skillpoints = models.IntegerField('Skillpoints')
+    enabled = models.BooleanField(default=True)
 
     @property
     def char_api(self):
