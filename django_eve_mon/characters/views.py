@@ -2,12 +2,12 @@ from collections import OrderedDict
 
 from braces.views import LoginRequiredMixin
 from django.contrib import messages
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, \
     FormView
 
-from characters.forms import ApiKeyForm, CharacterForm
+from .forms import ApiKeyForm, CharacterForm
 from .utils import UserIsOwnerMixin
 from .models import ApiKey, Character
 
@@ -89,12 +89,13 @@ class UpdateCharacter(UserIsOwnerMixin, DetailView):
         character = self.get_object()
         message = character.update_character_sheet()
         messages.add_message(request, message['status'], message['text'])
-        return redirect(reverse('characters:manage'))
+        return redirect(reverse_lazy('characters:manage'))
 
 
 class AddApiKey(LoginRequiredMixin, CreateView):
     model = ApiKey
     form_class = ApiKeyForm
+    success_url = reverse_lazy('characters:manage_apis')
 
     def get_form_kwargs(self):
         kwargs = super(AddApiKey, self).get_form_kwargs()
