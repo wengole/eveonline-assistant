@@ -30,12 +30,14 @@ class PlannedSkill(models.Model):
     plan = models.ForeignKey(
         'Plan',
         verbose_name='Plan',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='skills'
     )
     skill = models.ForeignKey(
         'skills.Skill',
         verbose_name='Skill',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='in_plans'
     )
     level = models.IntegerField('Level')
     position = models.IntegerField('Position')
@@ -47,3 +49,6 @@ class PlannedSkill(models.Model):
             self.skill,
             self.level
         )
+
+    class Meta:
+        ordering = ['level']
