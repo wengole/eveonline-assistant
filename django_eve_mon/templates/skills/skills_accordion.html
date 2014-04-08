@@ -21,9 +21,11 @@
                 {% if skill.published %}
                   <tr>
                     <td>
-                      <a href="#" id="skill-{{ skill.id }}">
+                      <button class="btn btn-link btn-xs"
+                              value="{{ skill.id }}"
+                              id="skill-{{ skill.id }}">
                         {{ skill.name }}
-                      </a>
+                      </button>
                     </td>
                   </tr>
                 {% endif %}
