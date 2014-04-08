@@ -5,7 +5,17 @@
 
 {% block content %}
   <div class="container">
-    <div class="panel panel-default">
+  <div class="col-md-3">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1 class="panel-title">Skill browser</h1>
+    </div>
+    <div class="panel-body">
+      Skills go here
+    </div>
+  </div>
+    <div class="col-md-9">
+      <div class="panel panel-default">
       <div class="panel-heading">
         <h1 class="panel-title">{{ plan.name }}</h1>
       </div>
@@ -34,6 +44,7 @@
           </tbody>
         </table>
       </div>
+    </div>
     </div>
   </div>
 {% endblock content %}
