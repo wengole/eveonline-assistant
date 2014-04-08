@@ -2,6 +2,7 @@ from braces.views import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView, DetailView
 from .models import Plan
 from .forms import PlanForm
+from skills.models import Group
 
 
 class AddPlan(LoginRequiredMixin, CreateView):
@@ -19,3 +20,10 @@ class ManagePlans(LoginRequiredMixin, UpdateView):
 
 class PlanDetail(LoginRequiredMixin, DetailView):
     model = Plan
+
+    def get_context_data(self, **kwargs):
+        context = super(PlanDetail, self).get_context_data(**kwargs)
+        context.update({
+            'group_list': Group.objects.all()
+        })
+        return context
