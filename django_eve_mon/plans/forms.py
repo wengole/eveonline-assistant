@@ -61,7 +61,7 @@ class AddSkillToPlanForm(forms.ModelForm):
             Fieldset(
                 '',
                 Field('plan', type='hidden'),
-                Field('skill', disabled='disabled'),
+                Field('skill', type='hidden'),
                 Field('level', type='number', max=5, min=1)
             ),
             FormActions(
