@@ -5,6 +5,7 @@ from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Fieldset, Reset, Field
 from django import forms
+from django.core.urlresolvers import reverse
 
 from .models import Plan, PlannedSkill
 
@@ -51,15 +52,16 @@ class AddSkillToPlanForm(forms.ModelForm):
         super(AddSkillToPlanForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper()
+        self.helper.form_action = reverse('plans:add_to_plan')
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-lg-2'
         self.helper.field_class = 'col-lg-8'
         self.helper.render_hidden_fields = True
         self.helper.layout = Layout(
             Fieldset(
-                'Add skill to plan',
+                '',
                 Field('plan', type='hidden'),
-                Field('skill', type='hidden'),
+                Field('skill', disabled='disabled'),
                 Field('level', type='number', max=5, min=1)
             ),
             FormActions(
