@@ -30,12 +30,7 @@
             <tbody>
             {% for skill_planned in plan.skills.all %}
               {% with skill=skill_planned.skill %}
-                <tr class="
-                  {% if skill_known.progress > 0.0 and skill_known.progress < 100.0 %}
-                    warning
-                  {% elif skill_known.progress == 100.0 and skill_known.level == 5 %}
-                    success
-                  {% endif %}">
+                <tr>
                   <td>{{ skill_planned.position }}</td>
                   <td>{{ skill }}</td>
                   <td>{{ skill_planned.level }}</td>
@@ -49,3 +44,51 @@
     </div>
   </div>
 {% endblock content %}
+{% block modal %}
+  <div class="modal fade"
+       id="skill-modal"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="skill-modal-label"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-hidden="true">&times;</button>
+          <h4 class="modal-title"
+              id="skill-modal-label">
+            Modal title</h4>
+        </div>
+        <div class="modal-body">
+          <p>One fine body…</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button"
+                  class="btn btn-default"
+                  data-dismiss="modal">
+            Close
+          </button>
+          <button type="button"
+                  class="btn btn-primary">
+            Save changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+  <script type="application/javascript">
+    $(document).ready(function () {
+      $('button.skill-btn').on('click', function () {
+        console.log(this.value);
+        $('#skill-modal').find('div.modal-body').html('<p>' + this.value +
+            '</p>');
+      });
+    });
+  </script>
+{% endblock %}

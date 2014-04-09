@@ -22,7 +22,9 @@
                   <tr>
                     <td>
                       <button class="btn btn-link btn-xs skill-btn"
-                              value="{{ skill.id }}">
+                              value="{{ skill.id }}"
+                              data-toggle="modal"
+                              data-target="#skill-modal">
                         {{ skill.name }}
                       </button>
                     </td>
@@ -37,38 +39,3 @@
     {% endif %}
   {% endfor %}
 </div>
-{% block modal %}
-  <div class="modal" id="skill-modal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true">×
-          </button>
-          <h4 class="modal-title">Modal title</h4>
-        </div>
-        <div class="modal-body">
-          <p>One fine body…</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button"
-                  class="btn btn-default"
-                  data-dismiss="modal">
-            Close
-          </button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endblock %}
-<script type="application/javascript">
-  $(document).ready(function() {
-    $('button.skill-btn').on('click', function() {
-      $('#skill-modal').find('div.modal-body').html('<p>' + this.value +
-          '</p>');
-    });
-  });
-</script>
