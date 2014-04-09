@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from .views import SkillsInGroups
+from .views import SkillsInGroups, AddSkillToPlan
 
 urlpatterns = patterns(
     '',
@@ -8,5 +8,10 @@ urlpatterns = patterns(
         regex=r'^$',
         view=SkillsInGroups.as_view(),
         name='list'
+    ),
+    url(
+        regex=r'^addToPlan/(?P<skill_id>\d+)/$',
+        view=AddSkillToPlan.as_view(),
+        name='add_to_plan'
     ),
 )
