@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, url
+
 from . import views
+
 
 urlpatterns = patterns(
     '',
@@ -20,7 +22,7 @@ urlpatterns = patterns(
         name='detail'
     ),
     url(
-        regex=r'^addToPlan/(?P<skill_id>\d+)/$',
+        regex=r'^addToPlan/$',
         view=views.AddSkillToPlan.as_view(),
         name='add_to_plan'
     ),

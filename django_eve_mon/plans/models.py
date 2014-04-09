@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 
@@ -39,7 +40,13 @@ class PlannedSkill(models.Model):
         on_delete=models.CASCADE,
         related_name='in_plans'
     )
-    level = models.IntegerField('Level')
+    level = models.IntegerField(
+        'Level',
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ]
+    )
     position = models.IntegerField('Position')
 
     def __unicode__(self):

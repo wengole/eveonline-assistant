@@ -2,8 +2,10 @@
 Views for the Plans app
 """
 from braces.views import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView, DetailView, FormView
-from .models import Plan
+from django.core.urlresolvers import reverse
+from django.views.generic import CreateView, DetailView, ListView
+
+from .models import Plan, PlannedSkill
 from .forms import PlanForm, AddSkillToPlanForm
 from skills.models import Group
 
@@ -24,7 +26,7 @@ class AddPlan(LoginRequiredMixin, CreateView):
         return super(AddPlan, self).form_valid(form)
 
 
-class ManagePlans(LoginRequiredMixin, UpdateView):
+class ManagePlans(LoginRequiredMixin, ListView):
     """
     List plans
     """
@@ -49,18 +51,25 @@ class PlanDetail(LoginRequiredMixin, DetailView):
         return context
 
 
-class AddSkillToPlan(FormView):
+class AddSkillToPlan(LoginRequiredMixin, CreateView):
+    model = PlannedSkill
     form_class = AddSkillToPlanForm
     template_name = 'plans/add_to_plan.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(AddSkillToPlan, self).get_context_data(**kwargs)
-        skill = None
-        try:
-            skill = Skill.objects.get(id=self.kwargs.get('skill_id', 0))
-        except Skill.DoesNotExist:
-            pass
-        context.update({
-            'skill': skill
+    def get_initial(self):
+        initial = super(AddSkillToPlan, self).get_initial()
+        initial.update({
+            'plan': self.request.GET.get('plan_id'),
+            'skill': self.request.GET.get('skill_id')
         })
-        return context
+        return initial
+
+    def form_valid(self, form):
+        # TODO: Actually add the skill and prerequisites in order
+        form.instance.position = 1
+        return super(AddSkillToPlan, self).form_valid(form)
+
+
+    def get_success_url(self):
+        return reverse('plans:detail', args=[self.request.POST['plan']])
+
