@@ -2,9 +2,9 @@
 Views for the Plans app
 """
 from braces.views import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView, DetailView
+from django.views.generic import CreateView, UpdateView, DetailView, FormView
 from .models import Plan
-from .forms import PlanForm
+from .forms import PlanForm, AddSkillToPlanForm
 from skills.models import Group
 
 
@@ -45,5 +45,22 @@ class PlanDetail(LoginRequiredMixin, DetailView):
         context = super(PlanDetail, self).get_context_data(**kwargs)
         context.update({
             'group_list': Group.objects.all()
+        })
+        return context
+
+
+class AddSkillToPlan(FormView):
+    form_class = AddSkillToPlanForm
+    template_name = 'plans/add_to_plan.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AddSkillToPlan, self).get_context_data(**kwargs)
+        skill = None
+        try:
+            skill = Skill.objects.get(id=self.kwargs.get('skill_id', 0))
+        except Skill.DoesNotExist:
+            pass
+        context.update({
+            'skill': skill
         })
         return context

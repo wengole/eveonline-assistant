@@ -19,4 +19,9 @@ urlpatterns = patterns(
         view=views.PlanDetail.as_view(pk_url_kwarg='plan_id'),
         name='detail'
     ),
+    url(
+        regex=r'^addToPlan/(?P<skill_id>\d+)/$',
+        view=views.AddSkillToPlan.as_view(),
+        name='add_to_plan'
+    ),
 )
