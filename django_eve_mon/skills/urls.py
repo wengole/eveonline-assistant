@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, url
-from .views import SkillsInGroups, AddSkillToPlan
+
+from .views import SkillsInGroups
+
 
 urlpatterns = patterns(
     '',

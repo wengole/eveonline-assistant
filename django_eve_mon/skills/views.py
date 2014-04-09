@@ -1,9 +1,9 @@
 """
 Views for the Skills app
 """
-from django.views.generic import ListView, FormView
-from .models import Group, Skill
-from .forms import AddSkillToPlanForm
+from django.views.generic import ListView
+
+from .models import Group
 
 
 class SkillsInGroups(ListView):
