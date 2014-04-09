@@ -69,7 +69,6 @@ class AddSkillToPlan(LoginRequiredMixin, CreateView):
         form.instance.position = 1
         return super(AddSkillToPlan, self).form_valid(form)
 
-
     def get_success_url(self):
         return reverse('plans:detail', args=[self.request.POST['plan']])
 

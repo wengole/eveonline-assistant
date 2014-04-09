@@ -20,6 +20,19 @@ class Plan(models.Model):
         on_delete=models.CASCADE
     )
 
+    def add_skill(self, skill, level):
+        existing_skill = self.character.has_skill(skill)
+        if existing_skill and existing_skill.level < level - 1:
+            return self.add_skill(skill, level - 1)
+        elif existing_skill:
+            return PlannedSkill.objects.create(
+                plan=self,
+                skill=skill,
+                level=level
+            )
+        else:
+
+
     def get_absolute_url(self):
         return reverse('plans:detail', args=[str(self.id)])
 

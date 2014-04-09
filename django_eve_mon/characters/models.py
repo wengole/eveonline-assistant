@@ -10,7 +10,7 @@ from evelink.account import Account
 from evelink.api import API
 from evelink.char import Char
 from characters.utils import SkillRelatedModel, points_per_second
-from core.utils import DjangoCache
+from core.utils import DjangoCache, GetOrNoneManager
 
 from skills.models import Attribute
 from skills.models import Skill
@@ -78,6 +78,9 @@ class Character(models.Model):
     @property
     def char_sheet(self):
         return self.char_api.character_sheet().result
+
+    def has_skill(self, skill):
+        return self.skilltrained_set.get_or_none(skill=skill)
 
     def attribute_value(self, attr):
         cache_key = '%s-%s' % (self.name, attr.name)
@@ -176,6 +179,7 @@ class Character(models.Model):
 
 
 class SkillTrained(SkillRelatedModel):
+    objects = GetOrNoneManager()
     @property
     def time_to_next_level(self):
         if self.level == 5:

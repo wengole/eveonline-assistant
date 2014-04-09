@@ -69,6 +69,9 @@ class AddSkillToPlanForm(forms.ModelForm):
             )
         )
 
+    def save(self, commit=True):
+        return self.plan.add_skill(self.skill, self.level)
+
     class Meta:
         model = PlannedSkill
         exclude = ['position',]
