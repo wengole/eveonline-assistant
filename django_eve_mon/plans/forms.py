@@ -80,9 +80,6 @@ class AddSkillToPlanForm(forms.Form):
             )
         )
 
-    def save(self, commit=True):
-        return self._meta.model.create()
-
     class Meta:
         """
         Form settings
