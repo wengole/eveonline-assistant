@@ -1,6 +1,45 @@
 from django.core.urlresolvers import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import Max
+
+
+class PlannedSkillManager(models.Manager):
+    def create(self, **kwargs):
+        plan = kwargs.get('plan')
+        skill = kwargs.get('skill')
+        level = kwargs.get('level')
+        existing_skill = plan.character.has_skill(skill)
+        if existing_skill.level == level:
+            return existing_skill
+        elif existing_skill.level == level - 1 or level == 1:
+            return super(PlannedSkillManager, self).create(
+                plan=plan,
+                skill=skill,
+                level=level,
+                position=plan.next_position()
+            )
+        elif existing_skill:
+            return self.create(
+                plan=plan,
+                skill=skill,
+                level=level - 1,
+                position=plan.next_position()
+            )
+        prerequisites = skill.required_skills.all()
+        for pre_skill in prerequisites:
+            self.create(
+                plan=plan,
+                skill=pre_skill.skill,
+                level=pre_skill.level,
+                position=plan.next_position()
+            )
+        return self.create(
+            plan=plan,
+            skill=skill,
+            level=level,
+            position=plan.next_position()
+        )
 
 
 class Plan(models.Model):
@@ -20,18 +59,9 @@ class Plan(models.Model):
         on_delete=models.CASCADE
     )
 
-    def add_skill(self, skill, level):
-        existing_skill = self.character.has_skill(skill)
-        if existing_skill and existing_skill.level < level - 1:
-            return self.add_skill(skill, level - 1)
-        elif existing_skill:
-            return PlannedSkill.objects.create(
-                plan=self,
-                skill=skill,
-                level=level
-            )
-        else:
-
+    def next_position(self):
+        return self.plannedskill_set.aggregate(Max('position'))[
+            'position__max'] + 1
 
     def get_absolute_url(self):
         return reverse('plans:detail', args=[str(self.id)])
@@ -61,6 +91,11 @@ class PlannedSkill(models.Model):
         ]
     )
     position = models.IntegerField('Position')
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super(PlannedSkill, self).save(force_insert, force_update, using,
+                                       update_fields)
 
     def __unicode__(self):
         return '%s: #%d %s L%d' % (

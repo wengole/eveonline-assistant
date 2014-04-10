@@ -70,7 +70,7 @@ class AddSkillToPlanForm(forms.ModelForm):
         )
 
     def save(self, commit=True):
-        return self.plan.add_skill(self.skill, self.level)
+        return self._meta.model.create()
 
     class Meta:
         model = PlannedSkill
