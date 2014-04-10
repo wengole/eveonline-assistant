@@ -49,6 +49,7 @@ class Common(Configuration):
         'south',  # Database migration helpers:
         'crispy_forms',  # Form layouts
         'menu',
+        'django_select2',
     )
 
     # Apps specific for this project go here.

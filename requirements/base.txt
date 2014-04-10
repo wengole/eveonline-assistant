@@ -36,3 +36,4 @@ django-suit==0.2.7
 evelink==0.3.1
 tqdm==1.0
 django-simple-menu==1.0.9
+django_select2==4.2.2
