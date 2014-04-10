@@ -59,9 +59,9 @@ class Plan(models.Model):
         on_delete=models.CASCADE
     )
 
+    @property
     def next_position(self):
-        return self.plannedskill_set.aggregate(Max('position'))[
-            'position__max'] + 1
+        return self.skills.all().aggregate(Max('position'))['position__max'] + 1
 
     def get_absolute_url(self):
         return reverse('plans:detail', args=[str(self.id)])
@@ -106,4 +106,4 @@ class PlannedSkill(models.Model):
         )
 
     class Meta:
-        ordering = ['level']
+        ordering = ['position']
