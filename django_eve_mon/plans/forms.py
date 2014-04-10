@@ -8,6 +8,7 @@ from django import forms
 from django.core.urlresolvers import reverse
 
 from .models import Plan, PlannedSkill
+from skills.models import Skill
 
 
 class PlanForm(forms.ModelForm):
@@ -43,10 +44,20 @@ class PlanForm(forms.ModelForm):
         exclude = ['user', ]
 
 
-class AddSkillToPlanForm(forms.ModelForm):
+class AddSkillToPlanForm(forms.Form):
     """
     Simple plain form to add a skill to a plan
     """
+    plan = forms.ModelChoiceField(
+        queryset=Plan.objects
+    )
+    skill = forms.ModelChoiceField(
+        queryset=Skill.objects
+    )
+    level = forms.IntegerField(
+        min_value=1,
+        max_value=5
+    )
 
     def __init__(self, *args, **kwargs):
         super(AddSkillToPlanForm, self).__init__(*args, **kwargs)
@@ -73,5 +84,8 @@ class AddSkillToPlanForm(forms.ModelForm):
         return self._meta.model.create()
 
     class Meta:
+        """
+        Form settings
+        """
         model = PlannedSkill
         exclude = ['position',]

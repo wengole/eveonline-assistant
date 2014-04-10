@@ -3,11 +3,11 @@ Views for the Plans app
 """
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView, FormView
 
 from .models import Plan, PlannedSkill
 from .forms import PlanForm, AddSkillToPlanForm
-from skills.models import Group
+from skills.models import Group, Skill
 
 
 class AddPlan(LoginRequiredMixin, CreateView):
@@ -51,22 +51,27 @@ class PlanDetail(LoginRequiredMixin, DetailView):
         return context
 
 
-class AddSkillToPlan(LoginRequiredMixin, CreateView):
+class AddSkillToPlan(LoginRequiredMixin, FormView):
     model = PlannedSkill
     form_class = AddSkillToPlanForm
     template_name = 'plans/add_to_plan.html'
 
     def get_initial(self):
         initial = super(AddSkillToPlan, self).get_initial()
+        plan = Plan.objects.get(pk=self.request.REQUEST.get('plan'))
+        skill = Skill.objects.get(pk=self.request.REQUEST.get('skill'))
         initial.update({
-            'plan': self.request.GET.get('plan_id'),
-            'skill': self.request.GET.get('skill_id')
+            'plan': plan,
+            'skill': skill
         })
         return initial
 
     def form_valid(self, form):
-        # TODO: Actually add the skill and prerequisites in order
-        form.instance.position = 1
+        PlannedSkill.objects.create(
+            plan=form.cleaned_data['plan'],
+            skill=form.cleaned_data['skill'],
+            level=form.cleaned_data['level']
+        )
         return super(AddSkillToPlan, self).form_valid(form)
 
     def get_success_url(self):
