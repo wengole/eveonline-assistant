@@ -4,44 +4,6 @@ from django.db import models
 from django.db.models import Max
 
 
-class PlannedSkillManager(models.Manager):
-    def create(self, **kwargs):
-        plan = kwargs.get('plan')
-        skill = kwargs.get('skill')
-        level = kwargs.get('level')
-        existing_skill = plan.character.has_skill(skill)
-        if existing_skill.level == level:
-            return existing_skill
-        elif existing_skill.level == level - 1 or level == 1:
-            return super(PlannedSkillManager, self).create(
-                plan=plan,
-                skill=skill,
-                level=level,
-                position=plan.next_position()
-            )
-        elif existing_skill:
-            return self.create(
-                plan=plan,
-                skill=skill,
-                level=level - 1,
-                position=plan.next_position()
-            )
-        prerequisites = skill.required_skills.all()
-        for pre_skill in prerequisites:
-            self.create(
-                plan=plan,
-                skill=pre_skill.skill,
-                level=pre_skill.level,
-                position=plan.next_position()
-            )
-        return self.create(
-            plan=plan,
-            skill=skill,
-            level=level,
-            position=plan.next_position()
-        )
-
-
 class Plan(models.Model):
     name = models.CharField(
         'Name',
@@ -61,7 +23,49 @@ class Plan(models.Model):
 
     @property
     def next_position(self):
-        return self.skills.all().aggregate(Max('position'))['position__max'] + 1
+        cur_pos = self.skills.all().aggregate(Max('position'))['position__max']
+        return cur_pos + 1 if cur_pos else 1
+
+    def add_to_plan(self, skill, level):
+        planned = self.skills.filter(skill=skill).last()
+        known = self.character.skilltrained_set.get_or_none(skill=skill)
+        if planned and planned.level >= level:
+            return planned
+        if known and known.level >= level:
+            return known
+        if planned or known:
+            plan_level = planned.level if planned is not None else known \
+                .level
+            while level > plan_level:
+                plan_level += 1
+                PlannedSkill.objects.create(
+                    plan=self,
+                    skill=skill,
+                    level=plan_level,
+                    position=self.next_position
+                )
+            return
+        prerequisites = [
+            x for x in skill.required_skills.all() if self.character.has_skill(
+                x.skill
+            ) is None or self.character.has_skill(x.skill).level < x.level
+        ]
+        if prerequisites:
+            for pre in prerequisites:
+                self.add_to_plan(
+                    skill=pre.skill,
+                    level=pre.level
+                )
+        plan_level = 0
+        while plan_level < level:
+            plan_level += 1
+            PlannedSkill.objects.create(
+                plan=self,
+                skill=skill,
+                level=plan_level,
+                position=self.next_position
+            )
+        return
 
     def get_absolute_url(self):
         return reverse('plans:detail', args=[str(self.id)])
@@ -91,11 +95,6 @@ class PlannedSkill(models.Model):
         ]
     )
     position = models.IntegerField('Position')
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        super(PlannedSkill, self).save(force_insert, force_update, using,
-                                       update_fields)
 
     def __unicode__(self):
         return '%s: #%d %s L%d' % (

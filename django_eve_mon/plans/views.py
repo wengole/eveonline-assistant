@@ -67,8 +67,8 @@ class AddSkillToPlan(LoginRequiredMixin, FormView):
         return initial
 
     def form_valid(self, form):
-        PlannedSkill.objects.create(
-            plan=form.cleaned_data['plan'],
+        plan = form.cleaned_data['plan']
+        plan.add_to_plan(
             skill=form.cleaned_data['skill'],
             level=form.cleaned_data['level']
         )
