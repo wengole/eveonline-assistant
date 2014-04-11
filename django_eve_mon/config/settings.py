@@ -127,7 +127,7 @@ class Common(Configuration):
 
     ########## CACHING
     # Do this here because thanks to django-pylibmc-sasl and pylibmc memcacheify is painful to install on windows.
-    # memcacheify is what's used in Production
+    # memcacheify is what's used in Heroku
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -304,7 +304,79 @@ class Local(Common):
     ########## Your local stuff: Below this line define 3rd party libary settings
 
 
-class Production(Common):
+class VPS(Common):
+    ########## INSTALLED_APPS
+    INSTALLED_APPS = Common.INSTALLED_APPS
+    ########## END INSTALLED_APPS
+
+    ########## SECRET KEY
+    SECRET_KEY = values.SecretValue()
+    ########## END SECRET KEY
+
+    ########## django-secure
+    INSTALLED_APPS += ("djangosecure", )
+
+    # set this to 60 seconds and then to 518400 when you can prove it works
+    SECURE_HSTS_SECONDS = 60
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = values.BooleanValue(True)
+    SECURE_FRAME_DENY = values.BooleanValue(True)
+    SECURE_CONTENT_TYPE_NOSNIFF = values.BooleanValue(True)
+    SECURE_BROWSER_XSS_FILTER = values.BooleanValue(True)
+    SESSION_COOKIE_SECURE = values.BooleanValue(False)
+    SESSION_COOKIE_HTTPONLY = values.BooleanValue(True)
+    SECURE_SSL_REDIRECT = values.BooleanValue(True)
+    ########## end django-secure
+
+    ########## SITE CONFIGURATION
+    # Hosts/domain names that are valid for this site
+    # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+    ALLOWED_HOSTS = ["*"]
+    ########## END SITE CONFIGURATION
+
+    INSTALLED_APPS += ("gunicorn", )
+
+    ########## EMAIL
+    DEFAULT_FROM_EMAIL = values.Value(
+        'django_eve_mon <noreply@django-eve-mon.com>')
+    EMAIL_HOST = values.Value('smtp.sendgrid.com')
+    EMAIL_HOST_PASSWORD = values.SecretValue(environ_prefix="",
+                                             environ_name="SENDGRID_PASSWORD")
+    EMAIL_HOST_USER = values.SecretValue(environ_prefix="",
+                                         environ_name="SENDGRID_USERNAME")
+    EMAIL_PORT = values.IntegerValue(587, environ_prefix="",
+                                     environ_name="EMAIL_PORT")
+    EMAIL_SUBJECT_PREFIX = values.Value('[django_eve_mon] ',
+                                        environ_name="EMAIL_SUBJECT_PREFIX")
+    EMAIL_USE_TLS = True
+    SERVER_EMAIL = EMAIL_HOST_USER
+    ########## END EMAIL
+
+    ########## TEMPLATE CONFIGURATION
+
+    # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-dirs
+    TEMPLATE_LOADERS = (
+        ('django.template.loaders.cached.Loader', (
+            'django.template.loaders.filesystem.Loader',
+            'django.template.loaders.app_directories.Loader',
+        )),
+    )
+    ########## END TEMPLATE CONFIGURATION
+
+    ########## CACHING
+    # Only do this here because thanks to django-pylibmc-sasl and pylibmc memcacheify is painful to install on windows.
+    try:
+        # See: https://github.com/rdegges/django-heroku-memcacheify
+        from memcacheify import memcacheify
+
+        CACHES = memcacheify()
+    except ImportError:
+        CACHES = values.CacheURLValue(default="memcached://127.0.0.1:11211")
+        ########## END CACHING
+
+        ########## Your production stuff: Below this line define 3rd party libary settings
+
+
+class Heroku(Common):
     ########## INSTALLED_APPS
     INSTALLED_APPS = Common.INSTALLED_APPS
     ########## END INSTALLED_APPS

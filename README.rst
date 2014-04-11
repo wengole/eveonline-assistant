@@ -14,7 +14,7 @@ django_eve_mon relies extensively on environment settings which **will not work 
 For configuration purposes, the following table maps the 'django_eve_mon' environment variables to their Django setting:
 
 ======================================= =========================== ============================================== ===========================================
-Environment Variable                    Django Setting              Development Default                            Production Default
+Environment Variable                    Django Setting              Development Default                            Heroku Default
 ======================================= =========================== ============================================== ===========================================
 DJANGO_AWS_ACCESS_KEY_ID                AWS_ACCESS_KEY_ID           n/a                                            raises error
 DJANGO_AWS_SECRET_ACCESS_KEY            AWS_SECRET_ACCESS_KEY       n/a                                            raises error
@@ -94,7 +94,7 @@ Run these commands to deploy the project to Heroku:
     heroku addons:add sendgrid:starter
     heroku addons:add memcachier:dev
     heroku pg:promote HEROKU_POSTGRESQL_COLOR
-    heroku config:set DJANGO_CONFIGURATION=Production
+    heroku config:set DJANGO_CONFIGURATION=Heroku
     heroku config:set DJANGO_SECRET_KEY=RANDOM_SECRET_KEY
     heroku config:set DJANGO_AWS_ACCESS_KEY_ID=YOUR_ID
     heroku config:set DJANGO_AWS_SECRET_ACCESS_KEY=YOUR_KEY
