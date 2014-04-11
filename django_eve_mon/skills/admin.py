@@ -7,6 +7,7 @@ from .models import Group, Skill, Requirement, Attribute
 
 class SkillForm(forms.ModelForm):
     class Meta:
+        exclude = ['id', ]
         model = Skill
         widgets = {
             'required_skills': Select2MultipleWidget(
@@ -17,9 +18,6 @@ class SkillForm(forms.ModelForm):
 
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
-    list_filter = ()
-    search_fields = ()
-    date_hierarchy = ''
 
 
 class SkillAdmin(admin.ModelAdmin):
@@ -34,23 +32,14 @@ class SkillAdmin(admin.ModelAdmin):
         'primary_attribute',
         'secondary_attribute'
     )
-    list_filter = ()
-    search_fields = ()
-    date_hierarchy = ''
 
 
 class RequirementAdmin(admin.ModelAdmin):
     list_display = ('skill', 'level')
-    list_filter = ()
-    search_fields = ()
-    date_hierarchy = ''
 
 
 class AttributeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
-    list_filter = ()
-    search_fields = ()
-    date_hierarchy = ''
 
 
 admin.site.register(Group, GroupAdmin)
