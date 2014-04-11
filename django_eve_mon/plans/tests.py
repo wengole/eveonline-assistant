@@ -1,3 +1,10 @@
 from django.test import TestCase
+from skills.models import Skill
 
-# Create your tests here.
+
+class TestPlan(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        skill_1 = Skill(
+
+        )
