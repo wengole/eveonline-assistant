@@ -1,10 +1,10 @@
-.. django_eve_mon documentation master file, created by
+.. EVE Online Assistant documentation master file, created by
    sphinx-quickstart.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to django_eve_mon's documentation!
-==========================================
+Welcome to EVE Online Assistant's documentation!
+====================================================================
 
 Contents:
 

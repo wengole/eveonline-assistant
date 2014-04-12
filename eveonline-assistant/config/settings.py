@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Django settings for django_eve_mon project.
+Django settings for EvE Online Helper project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -122,7 +122,7 @@ class Common(Configuration):
 
     ########## DATABASE CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
-    DATABASES = values.DatabaseURLValue('postgres://localhost/django_eve_mon')
+    DATABASES = values.DatabaseURLValue('postgres://localhost/assistant')
     ########## END DATABASE CONFIGURATION
 
     ########## CACHING
@@ -337,7 +337,7 @@ class VPS(Common):
 
     ########## EMAIL
     DEFAULT_FROM_EMAIL = values.Value(
-        'django_eve_mon <noreply@django-eve-mon.com>')
+        'EVE Online Assistant <noreply@django-eve-mon.com>')
     EMAIL_HOST = values.Value('smtp.sendgrid.com')
     EMAIL_HOST_PASSWORD = values.SecretValue(environ_prefix="",
                                              environ_name="SENDGRID_PASSWORD")
@@ -345,7 +345,7 @@ class VPS(Common):
                                          environ_name="SENDGRID_USERNAME")
     EMAIL_PORT = values.IntegerValue(587, environ_prefix="",
                                      environ_name="EMAIL_PORT")
-    EMAIL_SUBJECT_PREFIX = values.Value('[django_eve_mon] ',
+    EMAIL_SUBJECT_PREFIX = values.Value('[EvE Online Helper] ',
                                         environ_name="EMAIL_SUBJECT_PREFIX")
     EMAIL_USE_TLS = True
     SERVER_EMAIL = EMAIL_HOST_USER
@@ -440,12 +440,12 @@ class Heroku(Common):
 
     ########## EMAIL
     DEFAULT_FROM_EMAIL = values.Value(
-        'django_eve_mon <noreply@django-eve-mon.herokuapp.com>')
+        'EvE Online Helper <noreply@django-eve-mon.herokuapp.com>')
     EMAIL_HOST = values.Value('smtp.sendgrid.com')
     EMAIL_HOST_PASSWORD = values.SecretValue(environ_prefix="", environ_name="SENDGRID_PASSWORD")
     EMAIL_HOST_USER = values.SecretValue(environ_prefix="", environ_name="SENDGRID_USERNAME")
     EMAIL_PORT = values.IntegerValue(587, environ_prefix="", environ_name="EMAIL_PORT")
-    EMAIL_SUBJECT_PREFIX = values.Value('[django_eve_mon] ', environ_name="EMAIL_SUBJECT_PREFIX")
+    EMAIL_SUBJECT_PREFIX = values.Value('[EvE Online Helper] ', environ_name="EMAIL_SUBJECT_PREFIX")
     EMAIL_USE_TLS = True
     SERVER_EMAIL = EMAIL_HOST_USER
     ########## END EMAIL
@@ -473,34 +473,3 @@ class Heroku(Common):
         ########## END CACHING
 
         ########## Your production stuff: Below this line define 3rd party libary settings
-
-
-class Test(Common):
-    ########## INSTALLED_APPS
-    INSTALLED_APPS = Common.INSTALLED_APPS
-    ########## END INSTALLED_APPS
-
-    ########## Mail settings
-    EMAIL_HOST = "localhost"
-    EMAIL_PORT = 1025
-    EMAIL_BACKEND = values.Value(
-        'django.core.mail.backends.console.EmailBackend')
-    ########## End mail settings
-
-    ########## django-debug-toolbar
-    MIDDLEWARE_CLASSES = Common.MIDDLEWARE_CLASSES + (
-        'debug_toolbar.middleware.DebugToolbarMiddleware',)
-    INSTALLED_APPS += ('debug_toolbar',)
-
-    INTERNAL_IPS = ('127.0.0.1',)
-
-    DEBUG_TOOLBAR_CONFIG = {
-        'INTERCEPT_REDIRECTS': False,
-        'SHOW_TEMPLATE_CONTEXT': True,
-    }
-    ########## end django-debug-toolbar
-
-    ########## Your local stuff: Below this line define 3rd party libary settings
-    DATABASES = values.DatabaseURLValue(
-        'postgres://localhost/test_django_eve_mon'
-    )

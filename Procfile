@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath="$PWD/django_eve_mon" config.wsgi:application
+web: gunicorn --pythonpath="$PWD/eveonline-assistant" config.wsgi:application

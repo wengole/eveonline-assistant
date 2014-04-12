@@ -99,9 +99,9 @@ if "%1" == "qthelp" (
 	echo.
 	echo.Build finished; now you can run "qcollectiongenerator" with the ^
 .qhcp project file in %BUILDDIR%/qthelp, like this:
-	echo.^> qcollectiongenerator %BUILDDIR%\qthelp\django_eve_mon.qhcp
+	echo.^> qcollectiongenerator %BUILDDIR%\qthelp\eveonline-assistant.qhcp
 	echo.To view the help file:
-	echo.^> assistant -collectionFile %BUILDDIR%\qthelp\django_eve_mon.ghc
+	echo.^> assistant -collectionFile %BUILDDIR%\qthelp\eveonline-assistant.ghc
 	goto end
 )
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# django_eve_mon documentation build configuration file, created by
+# EVE Online Assistant documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'django_eve_mon'
+project = u'EVE Online Assistant'
 copyright = u'2014, Ben Cole'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -164,7 +164,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'django_eve_mondoc'
+htmlhelp_basename = 'eveonline-assistantdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -183,7 +183,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'django_eve_mon.tex', u'django_eve_mon Documentation',
+  ('index', 'eveonline-assistant.tex', u'EVE Online Assistant Documentation',
    u'Ben Cole', 'manual'),
 ]
 
@@ -213,7 +213,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'django_eve_mon', u'django_eve_mon Documentation',
+    ('index', 'eveonline-assistant', u'EVE Online Assistant Documentation',
      [u'Ben Cole'], 1)
 ]
 
@@ -227,9 +227,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'django_eve_mon', u'django_eve_mon Documentation',
-   u'Ben Cole', 'django_eve_mon',
-   'Web based skill planner for EVE Online','Miscellaneous'),
+  ('index', 'eveonline-assistant', u'EVE Online Assistant Documentation',
+   u'Ben Cole', 'EVE Online Assistant',
+   'A web based tool for managing your EVE Online','Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
