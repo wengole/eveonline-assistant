@@ -31,7 +31,8 @@ class Skill(models.Model):
     required_skills = models.ManyToManyField(
         'Requirement',
         verbose_name='Required skills',
-        related_name='provided_skills'
+        related_name='provided_skills',
+        blank=True
     )
     primary_attribute = models.ForeignKey(
         'Attribute',

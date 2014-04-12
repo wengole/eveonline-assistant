@@ -7,7 +7,7 @@ from .models import Group, Skill, Requirement, Attribute
 
 class SkillForm(forms.ModelForm):
     class Meta:
-        exclude = ['id', ]
+        fields = '__all__'
         model = Skill
         widgets = {
             'required_skills': Select2MultipleWidget(
