@@ -13,7 +13,6 @@ django-crispy-forms==1.4.0
 django-floppyforms==1.1.1
 
 # Models
-South==0.8.4
 django-model-utils==2.0.2
 
 # images
@@ -29,7 +28,6 @@ psycopg2==2.5.2
 # Unicode slugification
 unicode-slugify==0.1.1
 django-autoslug==1.7.2
-
 
 # Your custom requirements go here
 django-suit==0.2.7
