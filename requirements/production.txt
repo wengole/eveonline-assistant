@@ -3,3 +3,4 @@
 -r base.txt
 
 uWSGI==2.0.3
+django-redis-cache==0.11.1
