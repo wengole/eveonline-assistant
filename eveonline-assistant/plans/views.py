@@ -25,6 +25,16 @@ class AddPlan(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return super(AddPlan, self).form_valid(form)
 
+    def get_form_kwargs(self):
+        """
+        Add `user` to form kwargs
+        """
+        kwargs = super(AddPlan, self).get_form_kwargs()
+        kwargs.update(
+            {'user': self.request.user}
+        )
+        return kwargs
+
 
 class ManagePlans(LoginRequiredMixin, ListView):
     """

@@ -7,16 +7,18 @@ from crispy_forms.layout import Layout, Submit, Fieldset, Reset, Field
 from django import forms
 from django.core.urlresolvers import reverse
 
+from characters.models import Character
 from .models import Plan, PlannedSkill
 from skills.models import Skill
 
 
-class PlanForm(forms.ModelForm):
+class Plan
+Form(forms.ModelForm):
     """
     Simple ModelForm to add a new Skill Plan
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         super(PlanForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
@@ -35,6 +37,7 @@ class PlanForm(forms.ModelForm):
         )
 
         self.fields['character'].empty_label = ''
+        self.fields['character'].queryset = Character.objects.filter(user=user)
 
     class Meta:
         """
