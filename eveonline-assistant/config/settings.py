@@ -337,7 +337,7 @@ class VPS(Common):
 
     ########## EMAIL
     DEFAULT_FROM_EMAIL = values.Value(
-        'EVE Online Assistant <noreply@django-eve-mon.com>'
+        'EVE Online Assistant <noreply@wengole.com>'
     )
     EMAIL_HOST = values.Value('localhost')
     EMAIL_PORT = values.IntegerValue(25, environ_name='EMAIL_PORT')
