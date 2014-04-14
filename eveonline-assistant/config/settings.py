@@ -356,11 +356,11 @@ class VPS(Common):
     #CACHES = values.CacheURLValue('hiredis://unix/var/run/redis/redis.sock')
     CACHES = {
         'default': {
-            'BACKEND': 'redis_cache.RedisCache',
-            'LOCATION': '/var/run/redis/redis.sock',
+            'BACKEND': 'redis_cache.cache.RedisCache',
+            'LOCATION': 'unix:/var/run/redis/redis.sock:0',
             'OPTIONS': {
-                'DB': 0,
-                'PARSER_CLASS': 'redis.connection.HiredisParser'
+                'PARSER_CLASS': 'redis.connection.HiredisParser',
+                'CLIENT_CLASS': 'redis_cache.client.DefaultClient'
             },
         },
     }
