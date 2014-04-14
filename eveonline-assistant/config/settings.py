@@ -126,8 +126,6 @@ class Common(Configuration):
     ########## END DATABASE CONFIGURATION
 
     ########## CACHING
-    # Do this here because thanks to django-pylibmc-sasl and pylibmc memcacheify is painful to install on windows.
-    # memcacheify is what's used in Heroku
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -357,14 +355,7 @@ class VPS(Common):
     ########## END TEMPLATE CONFIGURATION
 
     ########## CACHING
-    # Only do this here because thanks to django-pylibmc-sasl and pylibmc memcacheify is painful to install on windows.
-    try:
-        # See: https://github.com/rdegges/django-heroku-memcacheify
-        from memcacheify import memcacheify
+    CACHES = values.CacheURLValue('hiredis:///var/run/redis/redis.sock/0')
+    ########## END CACHING
 
-        CACHES = memcacheify()
-    except ImportError:
-        CACHES = values.CacheURLValue(default="memcached://127.0.0.1:11211")
-        ########## END CACHING
-
-        ########## Your production stuff: Below this line define 3rd party libary settings
+    ########## Your production stuff: Below this line define 3rd party libary settings
