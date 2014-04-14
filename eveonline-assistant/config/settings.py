@@ -331,8 +331,6 @@ class VPS(Common):
     ALLOWED_HOSTS = ["*"]
     ########## END SITE CONFIGURATION
 
-    INSTALLED_APPS += ("gunicorn", )
-
     ########## EMAIL
     DEFAULT_FROM_EMAIL = values.Value(
         'EVE Online Assistant <noreply@wengole.co.uk>'
@@ -355,7 +353,17 @@ class VPS(Common):
     ########## END TEMPLATE CONFIGURATION
 
     ########## CACHING
-    CACHES = values.CacheURLValue('hiredis:///var/run/redis/redis.sock/0')
+    #CACHES = values.CacheURLValue('hiredis://unix/var/run/redis/redis.sock')
+    CACHES = {
+        'default': {
+            'BACKEND': 'redis_cache.RedisCache',
+            'LOCATION': '/var/run/redis/redis.sock',
+            'OPTIONS': {
+                'DB': 0,
+                'PARSER_CLASS': 'redis.connection.HiredisParser'
+            },
+        },
+    }
     ########## END CACHING
 
     ########## Your production stuff: Below this line define 3rd party libary settings
