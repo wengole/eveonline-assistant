@@ -12,8 +12,7 @@ from .models import Plan, PlannedSkill
 from skills.models import Skill
 
 
-class Plan
-Form(forms.ModelForm):
+class PlanForm(forms.ModelForm):
     """
     Simple ModelForm to add a new Skill Plan
     """
