@@ -40,9 +40,10 @@
                       <div class="progress-bar" style="width: {{ skill_known.progress }}%;"></div>
                     </div>
                   </td>
-                  <td>{{ skill_known.time_to_next_level }}</td>
+                  <td>{{ skill_known.time_to_next_level|default:"" }}</td>
                   <td class="hidden-xs hidden-sm">{{ skill_known.skillpoints|intcomma }}
-                    / {{ skill_known.sp_to_next_level|intcomma }}</td>
+                    {% if skill_known.sp_to_next_level > 0 %}/
+                    {{ skill_known.sp_to_next_level|intcomma }}{% endif %}</td>
                   <td style="text-align: center;"><span class="badge">{{ skill_known.level }}</span></td>
                 </tr>
               {% endwith %}
