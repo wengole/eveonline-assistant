@@ -58,6 +58,32 @@ class Skill(models.Model):
             5: 256000 * self.rank,
         }
 
+    def sp_to_level(self, from_level=0, to_level=1):
+        """
+        Calculate the skillpoint requirement from one level to another
+        :param from_level: int start level
+        :param to_level: int end level
+        :return: skillpoint total
+        :rtype: int
+        """
+        total = self.skillpoints[to_level] - self.skillpoints[from_level]
+        return total
+
+    def time_to_level(self, from_level=0, to_level=1, pri_attr_value=1,
+                      sec_attr_value=1):
+        """
+        Calculate the time taken to get from one level to another
+        :param from_level: int start level
+        :param to_level: int end level
+        :param pri_attr_value: the primary attribute value for the calculation
+        :param sec_attr_value: the secondary attribute value for the calculation
+        :return: The number of seconds this training will take
+        :rtype: int
+        """
+        sp = self.sp_to_level(from_level, to_level)
+        points_per_second = (pri_attr_value + (sec_attr_value / 2)) / 60
+        return int(sp / points_per_second)
+
     def __unicode__(self):
         return self.name
 

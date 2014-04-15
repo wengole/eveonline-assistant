@@ -15,7 +15,7 @@ from evelink.api import API
 from evelink.char import Char
 from slugify import slugify
 
-from characters.utils import SkillRelatedModel, points_per_second
+from characters.utils import SkillRelatedModel, points_per_second, timedelta_to_str
 from core.utils import DjangoCache, GetOrNoneManager
 from skills.models import Attribute
 from skills.models import Skill
@@ -212,15 +212,17 @@ class Character(models.Model):
 
 class SkillTrained(SkillRelatedModel):
     objects = GetOrNoneManager()
+
     @property
     def time_to_next_level(self):
         if self.level == 5:
-            return 0
-        seconds = (self.sp_to_next_level - self.skillpoints) / points_per_second(
-            self.character.attribute_value(self.skill.primary_attribute),
-            self.character.attribute_value(self.skill.secondary_attribute)
+            return
+        pri_attr = self.character.attribute_value(self.skill.primary_attribute)
+        sec_attr = self.character.attribute_value(self.skill.secondary_attribute)
+        td = timedelta(
+            seconds=self.skill.time_to_level(self.level, self.level + 1, pri_attr, sec_attr)
         )
-        return str(timedelta(seconds=int(seconds)))
+        return timedelta_to_str(td)
 
     @property
     def progress(self):

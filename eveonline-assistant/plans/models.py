@@ -1,7 +1,11 @@
+from datetime import timedelta, datetime
+
 from django.core.urlresolvers import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import Max
+
+from characters.utils import timedelta_to_str
 
 
 class Plan(models.Model):
@@ -95,6 +99,48 @@ class PlannedSkill(models.Model):
         ]
     )
     position = models.IntegerField('Position')
+
+    @property
+    def character(self):
+        """
+        Quick access to the character of this skill
+        """
+        return self.plan.character
+
+    @property
+    def training_time_td(self):
+        """
+        Calculate the time to train to this planned level from previous
+
+        :return: The time to train to this planned skill level
+        :rtype: timedelta
+        """
+        known = self.character.has_skill(self.skill)
+        if known and self.level == known.level + 1:
+            return known.time_to_next_level
+        pri_attr = self.character.attribute_value(self.skill.primary_attribute)
+        sec_attr = self.character.attribute_value(self.skill.secondary_attribute)
+        return timedelta(seconds=self.skill.time_to_level(
+            self.level - 1,
+            self.level,
+            pri_attr,
+            sec_attr
+        ))
+
+    @property
+    def training_time(self):
+        """
+        Parse the training time timedelta to a string
+        """
+        return timedelta_to_str(self.training_time_td)
+
+    @property
+    def eta(self):
+        """
+        Return the current time plus timedelta
+        """
+        # TODO: Needs to include previous skills
+        return datetime.utcnow() + self.training_time_td
 
     def __unicode__(self):
         return '%s: #%d %s L%d' % (
