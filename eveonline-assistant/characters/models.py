@@ -9,9 +9,9 @@ from django.utils.timezone import utc, now
 from evelink.account import Account
 from evelink.api import API
 from evelink.char import Char
+
 from characters.utils import SkillRelatedModel, points_per_second
 from core.utils import DjangoCache, GetOrNoneManager
-
 from skills.models import Attribute
 from skills.models import Skill
 
@@ -101,7 +101,7 @@ class Character(models.Model):
             'status': messages.SUCCESS,
             'text': 'Updated %s\'s character sheet successfully' % self.name
         }
-        if self._update_attributes() and self._update_skills():
+        if self.update_attributes() and self._update_skills():
             return message
         message['status'] = messages.ERROR
         message['text'] = 'Failed to update %s\'s character sheet' % self.name
@@ -130,7 +130,7 @@ class Character(models.Model):
             sq.save()
         return message
 
-    def _update_attributes(self):
+    def update_attributes(self):
         sheet_attributes = self.char_sheet['attributes']
         for attr in sheet_attributes:
             attribute = Attribute.objects.get(name=attr)

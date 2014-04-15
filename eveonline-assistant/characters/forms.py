@@ -1,5 +1,4 @@
 from crispy_forms.bootstrap import FormActions
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Field, HTML
 from django import forms
@@ -61,7 +60,6 @@ class ApiKeyForm(ModelForm):
         for cid in characters.keys():
             char, _ = Character.objects.get_or_create(
                 id=cid,
-                apikey=instance,
                 defaults={
                     'user': self.user,
                     'name': characters[cid]['name'],
@@ -69,7 +67,9 @@ class ApiKeyForm(ModelForm):
                     'enabled': False
                 }
             )
-            char._update_attributes()
+            char.apikey = instance
+            char.save()
+            char.update_attributes()
         return instance
 
     class Meta:
