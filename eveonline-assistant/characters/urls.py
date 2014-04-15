@@ -1,5 +1,10 @@
+"""
+URLs for the characters app
+"""
 from django.conf.urls import patterns, url
+
 from .views import AddCharacter, ManageCharacters, ManageApiKeys, CharacterDetail, UpdateCharacter, AddApiKey
+
 
 urlpatterns = patterns(
     '',
@@ -15,13 +20,13 @@ urlpatterns = patterns(
         name='manage'
     ),
     url(
-        regex=r'^manage/(?P<char_id>\d+)/fetch/$',
-        view=UpdateCharacter.as_view(pk_url_kwarg='char_id'),
+        regex=r'^manage/(?P<slug>\S+)/fetch/$',
+        view=UpdateCharacter.as_view(slug_url_kwarg='slug'),
         name='fetch'
     ),
     url(
-        regex=r'^manage/(?P<char_id>\d+)/$',
-        view=CharacterDetail.as_view(pk_url_kwarg='char_id'),
+        regex=r'^manage/(?P<slug>\S+)/$',
+        view=CharacterDetail.as_view(slug_url_kwarg='slug'),
         name='detail'
     ),
     url(

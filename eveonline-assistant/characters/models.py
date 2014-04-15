@@ -1,6 +1,10 @@
+"""
+Models for character app
+"""
 from decimal import Decimal
 from datetime import timedelta, datetime
 
+from autoslug import AutoSlugField
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -9,6 +13,7 @@ from django.utils.timezone import utc, now
 from evelink.account import Account
 from evelink.api import API
 from evelink.char import Char
+from slugify import slugify
 
 from characters.utils import SkillRelatedModel, points_per_second
 from core.utils import DjangoCache, GetOrNoneManager
@@ -17,6 +22,9 @@ from skills.models import Skill
 
 
 class ApiKey(models.Model):
+    """
+    Model representing EVE API Key providing helper methods
+    """
     key_id = models.IntegerField('Key id', primary_key=True)
     verification_code = models.CharField('Verification code', max_length=255)
     user = models.ForeignKey(
@@ -28,15 +36,29 @@ class ApiKey(models.Model):
 
     @property
     def api(self):
+        """
+        Returns an evelink API object generated from this ApiKey
+        """
         return API(
             api_key=(self.key_id, self.verification_code),
             cache=DjangoCache()
         )
 
     def is_owner(self, user):
+        """
+        Is the given user to owner of this object
+
+        :param user: The user to check
+        :rtype: bool
+        """
         return self.user == user
 
     def get_characters(self):
+        """
+        Get the list of characters from the EVE API
+
+        :rtype: Evelink api result
+        """
         account = Account(api=self.api)
         return account.characters().result
 
@@ -70,6 +92,10 @@ class Character(models.Model):
     )
     skillpoints = models.IntegerField('Skillpoints')
     enabled = models.BooleanField(default=True)
+    slug = AutoSlugField(
+        populate_from='name',
+        unique=True,
+    )
 
     @property
     def char_api(self):
@@ -91,17 +117,17 @@ class Character(models.Model):
         return value
 
     def get_absolute_url(self):
-        return reverse('characters:detail', args=[str(self.id)])
+        return reverse('characters:detail', kwargs={'slug': self.slug})
 
     def get_fetch_url(self):
-        return reverse('characters:fetch', args=[str(self.id)])
+        return reverse('characters:fetch', kwargs={'slug': self.slug})
 
     def update_character_sheet(self):
         message = {
             'status': messages.SUCCESS,
-            'text': 'Updated %s\'s character sheet successfully' % self.name
+            'text': 'Updated %s\'s character successfully' % self.name
         }
-        if self.update_attributes() and self._update_skills():
+        if self.update_attributes() and self.update_skills() and self.update_skill_queue():
             return message
         message['status'] = messages.ERROR
         message['text'] = 'Failed to update %s\'s character sheet' % self.name
@@ -150,7 +176,7 @@ class Character(models.Model):
         # TODO: Catch exception and return False
         return True
 
-    def _update_skills(self):
+    def update_skills(self):
         skills = self.char_sheet['skills']
         for skill in skills:
             skl = Skill.objects.get(id=skill['id'])
@@ -170,6 +196,12 @@ class Character(models.Model):
 
     def is_owner(self, user):
         return self.user == user
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.slug = slugify(self.name)
+        super(Character, self).save(force_insert, force_update, using,
+                                    update_fields)
 
     def __unicode__(self):
         return self.name
