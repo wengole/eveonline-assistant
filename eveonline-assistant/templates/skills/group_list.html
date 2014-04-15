@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% load static %}{% load i18n %}
+{% load static i18n cache %}
 
 {% block title %}Skills{% endblock %}
 
 {% block content %}
 
   <div class="container">
-
-    {% include "skills/skills_accordion.html" %}
-
+    {% cache 86400 skill_list %}
+      {% include "skills/skills_accordion.html" %}
+    {% endcache %}
   </div>
 
 {% endblock content %}

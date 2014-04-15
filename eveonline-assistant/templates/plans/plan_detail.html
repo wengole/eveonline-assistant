@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static humanize %}
+{% load static humanize cache %}
 
 {% block title %}Plan: {{ plan.name }}{% endblock %}
 
@@ -11,7 +11,9 @@
           <h1 class="panel-title">Skill browser</h1>
         </div>
         <div class="panel-body">
-          {% include "skills/skills_accordion.html" %}
+          {% cache 86400 skill_list %}
+            {% include "skills/skills_accordion.html" %}
+          {% endcache %}
         </div>
       </div>
     </div>
