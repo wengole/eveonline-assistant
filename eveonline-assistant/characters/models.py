@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.core.cache import cache
+from django.db.models import Sum
 from django.utils.timezone import utc, now
 from evelink.account import Account
 from evelink.api import API
@@ -104,6 +105,17 @@ class Character(models.Model):
     @property
     def char_sheet(self):
         return self.char_api.character_sheet().result
+
+    @property
+    def skill_groups(self):
+        groups = self.skilltrained_set.values(
+            'skill__group__name'
+        ).annotate(
+            sp_sum=Sum('skillpoints')
+        ).order_by(
+            'skill__group__name'
+        )
+        groups_dict = dict([(x['skill__group__name'], x['sp_sum']) for x in groups])
 
     def has_skill(self, skill):
         return self.skilltrained_set.get_or_none(skill=skill)
