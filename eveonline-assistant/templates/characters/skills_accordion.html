@@ -1,13 +1,15 @@
 {% load humanize %}
 <div class="panel-group" id="skills-accordion">
-  {% for group, skills in groups.items %}
+  {% for group in groups %}
     <div class="panel panel-default">
       <a data-toggle="collapse"
          data-parent="#skills-accordion"
          href="#collapse{{ forloop.counter }}">
         <div class="panel-heading">
           <h4 class="panel-title">
-            {{ group }} <b class="caret"></b>
+            {{ group.skill__group__name }} <b class="caret"></b>
+            <span class="pull-right">SP: {{ group.sp_sum|intcomma }}
+              ({{ group.trained }} / {{ group.total }})</span>
           </h4>
         </div>
       </a>
@@ -26,7 +28,7 @@
               </tr>
             </thead>
             <tbody>
-            {% for skill_known in skills %}
+            {% for skill_known in group.skills %}
               {% with skill=skill_known.skill %}
                 <tr class="
                   {% if skill_known.progress > 0.0 and skill_known.progress < 100.0 %}

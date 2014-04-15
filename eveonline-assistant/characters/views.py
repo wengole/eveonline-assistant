@@ -50,7 +50,7 @@ class UpdateCharacter(UserIsOwnerMixin, DetailView):
             raise Http404
         message = character.update_character_sheet()
         messages.add_message(request, message['status'], message['text'])
-        return redirect(reverse_lazy('characters:manage'))
+        return redirect(self.request.META.get('HTTP_REFERER'))
 
 
 class AddApiKey(LoginRequiredMixin, CreateView):
@@ -92,6 +92,6 @@ class CharacterDetail(UserIsOwnerMixin, DetailView):
                 groups[skill.skill.group.name] = []
             groups[skill.skill.group.name].append(skill)
         context = {
-            'groups': groups
+            'groups': character.skill_groups
         }
         return super(CharacterDetail, self).get_context_data(**context)

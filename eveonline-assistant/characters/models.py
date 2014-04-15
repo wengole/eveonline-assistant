@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.core.cache import cache
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.utils.timezone import utc, now
 from evelink.account import Account
 from evelink.api import API
@@ -18,7 +18,7 @@ from slugify import slugify
 
 from characters.utils import SkillRelatedModel, points_per_second, timedelta_to_str
 from core.utils import DjangoCache, GetOrNoneManager
-from skills.models import Attribute
+from skills.models import Attribute, Group
 from skills.models import Skill
 
 
@@ -111,11 +111,20 @@ class Character(models.Model):
         groups = self.skilltrained_set.values(
             'skill__group__name'
         ).annotate(
-            sp_sum=Sum('skillpoints')
+            sp_sum=Sum('skillpoints'),
+            trained=Count('id'),
         ).order_by(
             'skill__group__name'
         )
-        groups_dict = dict([(x['skill__group__name'], x['sp_sum']) for x in groups])
+        for group in groups:
+            group['skills'] = self.skilltrained_set.filter(
+                skill__group__name=group['skill__group__name'])
+            group['total'] = Group.objects.filter(
+                name=group['skill__group__name']
+            ).aggregate(
+                total=Count('skills__id')
+            )['total']
+        return groups
 
     def has_skill(self, skill):
         return self.skilltrained_set.get_or_none(skill=skill)

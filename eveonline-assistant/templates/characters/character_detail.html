@@ -4,7 +4,6 @@
 {% block title %}Character: {{ character.name }}{% endblock %}
 
 {% block content %}
-  <div class="container">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h1 class="panel-title">{{ character.name }}</h1>
@@ -14,6 +13,7 @@
           <img src="//image.eveonline.com/Character/{{ character.id }}_256.jpg"/>
         </div>
         <div class="col-sm-8">
+        <div class="row">
           <dl class="dl-horizontal">
             {% for attribute in character.attributes.select_related.all %}
               <dt>{{ attribute.attribute.name|capfirst }}</dt>
@@ -21,9 +21,12 @@
             {% endfor %}
           </dl>
         </div>
+        <div class="row">
+          <a href="{{ character.get_fetch_url }}" class="btn
+          btn-success">Update</a>
+        </div>
+        </div>
       </div>
     </div>
     {% include "characters/skills_accordion.html" %}
-  </div>
-  </div>
 {% endblock content %}
