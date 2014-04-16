@@ -1,89 +1,80 @@
-from django.test import TestCase
-from characters.models import Character, ApiKey, SkillTrained
-from plans.models import Plan, PlannedSkill
+from characters.models import SkillTrained
+from core.tests import BaseTest
+from plans.forms import PlanForm
+from plans.models import PlannedSkill
 from skills.models import Skill
-from users.models import User
 
 
-class TestPlan(TestCase):
-    fixtures = ['skills', 'users', 'characters',]
+class TestPlan(BaseTest):
+    fixtures = ['skills', ]
 
-    def setUp(self):
-        self.user = User.objects.get(username='test_user')
-        self.character = Character.objects.get(name='TestChar')
-        self.apikey = ApiKey.objects.get(key_id='1234')
-        self.plan = Plan.objects.create(
-            name='Test Plan',
-            character=self.character,
-            user=self.user
+    def test_create_plan(self):
+        # Ensure the form for creating a plan only lists user's characters
+        form = PlanForm(
+            self.user1
         )
-
-    def test_setUp(self):
-        self.assertIsNotNone(self.user)
-        self.assertIsNotNone(self.character)
-        self.assertIsNotNone(self.apikey)
-        self.assertIsNotNone(self.plan)
+        char_field = form.fields['character']
+        self.assertTrue(self.character1 in char_field.queryset)
+        self.assertFalse(self.character2 in char_field.queryset)
 
     def test_add_to_plan(self):
-        self.maxDiff = None
-
         # Add a skill with requirements to the plan and ensure the planned
         # skills are correct
         skill = Skill.objects.get(name='Armor Layering')
-        self.plan.add_to_plan(
+        self.plan1.add_to_plan(
             skill=skill,
             level=2
         )
         expected = [
             repr(PlannedSkill(
-                plan=self.plan,
+                plan=self.plan1,
                 skill=Skill.objects.get(name='Mechanics'),
                 level=1,
                 position=1
             )),
             repr(PlannedSkill(
-                plan=self.plan,
+                plan=self.plan1,
                 skill=Skill.objects.get(name='Mechanics'),
                 level=2,
                 position=2
             )),
             repr(PlannedSkill(
-                plan=self.plan,
+                plan=self.plan1,
                 skill=Skill.objects.get(name='Mechanics'),
                 level=3,
                 position=3
             )),
             repr(PlannedSkill(
-                plan=self.plan,
+                plan=self.plan1,
                 skill=Skill.objects.get(name='Armor Layering'),
                 level=1,
                 position=4
             )),
             repr(PlannedSkill(
-                plan=self.plan,
+                plan=self.plan1,
                 skill=Skill.objects.get(name='Armor Layering'),
                 level=2,
                 position=5
             ))
         ]
-        self.assertEqual(self.plan.skills.count(), 5)
-        self.assertQuerysetEqual(self.plan.skills.all(), expected)
+        self.assertEqual(self.plan1.skills.count(), 5)
+        self.assertQuerysetEqual(self.plan1.skills.all(), expected)
 
         # Add the skill again to the next level, should only add one more
         # plan entry
-        self.plan.add_to_plan(skill, 3)
-        self.assertEqual(self.plan.skills.count(), 6)
+        self.plan1.add_to_plan(skill, 3)
+        self.assertEqual(self.plan1.skills.count(), 6)
 
         # Add a skill known to the character then try and add it to the plan
         # should result in no more planned skill
         skill = Skill.objects.get(name='Hull Upgrades')
         SkillTrained.objects.create(
-            character=self.character,
+            character=self.character1,
             skill=skill,
             level=1
         )
-        self.plan.add_to_plan(skill, 1)
-        self.assertEqual(self.plan.skills.count(), 6)
-        self.assertFalse(self.plan.skills.filter(
+        self.plan1.add_to_plan(skill, 1)
+        self.assertEqual(self.plan1.skills.count(), 6)
+        self.assertFalse(self.plan1.skills.filter(
             skill__name='Hull Upgrades'
         ))

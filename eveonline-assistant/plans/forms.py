@@ -36,7 +36,7 @@ class PlanForm(forms.ModelForm):
         )
 
         self.fields['character'].empty_label = ''
-        self.fields['character'].queryset = Character.objects.filter(user=user)
+        self.fields['character'].queryset = user.characters.filter(enabled=True)
 
     class Meta:
         """
