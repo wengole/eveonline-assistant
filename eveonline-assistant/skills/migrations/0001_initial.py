@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(verbose_name='Description')),
                 ('primary_attribute', models.ForeignKey(to='skills.Attribute', to_field=u'id', verbose_name='Primary Attribute')),
                 ('secondary_attribute', models.ForeignKey(to='skills.Attribute', to_field=u'id', verbose_name='Secondary Attribute')),
-                ('required_skills', models.ManyToManyField(to='skills.Requirement', verbose_name='Required skills')),
+                ('required_skills', models.ManyToManyField(to='skills.Requirement', verbose_name='Required skills', blank=True)),
             ],
             options={
                 u'ordering': ['name'],
