@@ -2,6 +2,7 @@ from django.core.cache import cache
 from django.db import models
 from evelink import api
 import time
+from functools import wraps
 
 
 class DjangoCache(api.APICache):
@@ -27,3 +28,17 @@ class GetOrNoneManager(models.Manager):
             #logger.warn('No %s matching kwargs %s' % (self.model._meta
             # .verbose_name, kwargs))
             return None
+
+
+def cache_method(cache_key, timeout=300):
+    def cache_it(func):
+        @wraps(func)
+        def with_cache(self, *args, **kwargs):
+            cached = cache.get(cache_key)
+            if cached is not None:
+                return cached
+            value = func(*args, **kwargs)
+            cache.set(cache_key, value, timeout)
+            return value
+        return with_cache
+    return cache_it

@@ -17,7 +17,7 @@ from evelink.char import Char
 from slugify import slugify
 
 from characters.utils import SkillRelatedModel, points_per_second, timedelta_to_str
-from core.utils import DjangoCache, GetOrNoneManager
+from core.utils import DjangoCache, GetOrNoneManager, cache_method
 from skills.models import Attribute, Group
 from skills.models import Skill
 
@@ -126,8 +126,14 @@ class Character(models.Model):
             )['total']
         return groups
 
+    @cache_method()
     def has_skill(self, skill):
-        return self.skilltrained_set.get_or_none(skill=skill)
+        cache_key = '%s-has-skill-%s' % (self, skill)
+        cached = cache.get(cache_key)
+        if cached is not None:
+            return cached
+        skl = self.skilltrained_set.get_or_none(skill=skill)
+        return skl
 
     def attribute_value(self, attr):
         cache_key = '%s-%s' % (self.name, attr.name)

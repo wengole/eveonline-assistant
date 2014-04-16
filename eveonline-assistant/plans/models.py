@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import Max
+from django.core.cache import cache
 
 from characters.utils import timedelta_to_str
 
@@ -101,6 +102,15 @@ class PlannedSkill(models.Model):
     position = models.IntegerField('Position')
 
     @property
+    def previous_skill(self):
+        if self.position == 1:
+            return None
+        return PlannedSkill.objects.get(
+            plan=self.plan,
+            position=self.position - 1
+        )
+
+    @property
     def character(self):
         """
         Quick access to the character of this skill
@@ -120,12 +130,29 @@ class PlannedSkill(models.Model):
             return known.time_to_next_level
         pri_attr = self.character.attribute_value(self.skill.primary_attribute)
         sec_attr = self.character.attribute_value(self.skill.secondary_attribute)
-        return timedelta(seconds=self.skill.time_to_level(
+        td = timedelta(seconds=self.skill.time_to_level(
             self.level - 1,
             self.level,
             pri_attr,
             sec_attr
         ))
+        return td
+
+    @property
+    def cumulative_training_time_td(self):
+        cache_key = 'training-cumulative-td-%s' % self
+        cached = cache.get(cache_key)
+        if cached is not None:
+            return cached
+        td_total = timedelta()
+        prev = self
+        while True:
+            if prev is None:
+                break
+            td_total += prev.training_time_td
+            prev = prev.previous_skill
+        cache.set(cache_key, td_total)
+        return td_total
 
     @property
     def training_time(self):
@@ -139,8 +166,7 @@ class PlannedSkill(models.Model):
         """
         Return the current time plus timedelta
         """
-        # TODO: Needs to include previous skills
-        return datetime.utcnow() + self.training_time_td
+        return datetime.utcnow() + self.cumulative_training_time_td
 
     def __unicode__(self):
         return '%s: #%d %s L%d' % (
