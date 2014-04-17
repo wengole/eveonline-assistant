@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.core.cache import cache
 from django.db.models import Sum, Count
+from django.utils.functional import cached_property
 from django.utils.timezone import utc, now
 from evelink.account import Account
 from evelink.api import API
@@ -17,7 +18,7 @@ from evelink.char import Char
 from slugify import slugify
 
 from characters.utils import SkillRelatedModel, points_per_second, timedelta_to_str
-from core.utils import DjangoCache, GetOrNoneManager, cache_method
+from core.utils import DjangoCache, GetOrNoneManager, cacheable
 from skills.models import Attribute, Group
 from skills.models import Skill
 
@@ -126,8 +127,10 @@ class Character(models.Model):
             )['total']
         return groups
 
-    @cache_method()
-    def has_skill(self, skill):
+    @cacheable('%(name)s-has-skill-%(skill)s')
+    def has_skill(self, skill=None):
+        if skill is None:
+            return
         cache_key = '%s-has-skill-%s' % (self, skill)
         cached = cache.get(cache_key)
         if cached is not None:
@@ -240,7 +243,7 @@ class Character(models.Model):
 class SkillTrained(SkillRelatedModel):
     objects = GetOrNoneManager()
 
-    @property
+    @cached_property
     def time_to_next_level(self):
         if self.level == 5:
             return
@@ -251,7 +254,7 @@ class SkillTrained(SkillRelatedModel):
         )
         return timedelta_to_str(td)
 
-    @property
+    @cached_property
     def progress(self):
         if self.level == 5:
             return Decimal(100)
@@ -284,7 +287,7 @@ class AttributeValues(models.Model):
     base = models.IntegerField('Base')
     bonus = models.IntegerField('Bonus')
 
-    @property
+    @cached_property
     def total(self):
         return self.base + self.bonus
 
@@ -303,11 +306,10 @@ class SkillQueue(SkillRelatedModel):
     start_time = models.DateTimeField('Start Time')
     end_time = models.DateTimeField('End Time')
 
-    @property
+    @cached_property
     def current_sp(self):
         if self.position != 0:
             return self.character.skilltrained_set.get(skill=self.skill).skillpoints
         seconds_left = Decimal((self.end_time - datetime.utcnow().replace(tzinfo=utc)).total_seconds())
         train_rate = points_per_second(self.primary_attribute_value, self.secondary_attribute_value)
         return int(self.end_sp - (seconds_left * train_rate))
-

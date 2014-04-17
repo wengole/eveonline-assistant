@@ -1,8 +1,10 @@
+import hashlib
+import time
+from functools import wraps
+
 from django.core.cache import cache
 from django.db import models
 from evelink import api
-import time
-from functools import wraps
 
 
 class DjangoCache(api.APICache):
@@ -30,15 +32,18 @@ class GetOrNoneManager(models.Manager):
             return None
 
 
-def cache_method(cache_key, timeout=300):
-    def cache_it(func):
+def cacheable(cache_key, timeout=3600):
+    def paramed_decorator(func):
         @wraps(func)
-        def with_cache(self, *args, **kwargs):
-            cached = cache.get(cache_key)
-            if cached is not None:
-                return cached
-            value = func(*args, **kwargs)
-            cache.set(cache_key, value, timeout)
-            return value
-        return with_cache
-    return cache_it
+        def decorated(self, *args, **kwargs):
+            kwargs.update(self.__dict__)
+            key = hashlib.md5.digest(cache_key % kwargs)
+            res = cache.get(key)
+            if res is None:
+                res = func(self, *args, **kwargs)
+                cache.set(key, res, timeout)
+            return res
+        decorated.__doc__ = func.__doc__
+        decorated.__dict__ = func.__dict__
+        return decorated
+    return paramed_decorator

@@ -5,8 +5,10 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import Max
 from django.core.cache import cache
+from django.utils.functional import cached_property
 
 from characters.utils import timedelta_to_str
+from core.utils import cacheable
 
 
 class Plan(models.Model):
@@ -52,8 +54,8 @@ class Plan(models.Model):
             return
         prerequisites = [
             x for x in skill.required_skills.all() if self.character.has_skill(
-                x.skill
-            ) is None or self.character.has_skill(x.skill).level < x.level
+                skill=x.skill
+            ) is None or self.character.has_skill(skill=x.skill).level < x.level
         ]
         if prerequisites:
             for pre in prerequisites:
@@ -101,7 +103,7 @@ class PlannedSkill(models.Model):
     )
     position = models.IntegerField('Position')
 
-    @property
+    @cached_property
     def previous_skill(self):
         if self.position == 1:
             return None
@@ -110,14 +112,14 @@ class PlannedSkill(models.Model):
             position=self.position - 1
         )
 
-    @property
+    @cached_property
     def character(self):
         """
         Quick access to the character of this skill
         """
         return self.plan.character
 
-    @property
+    @cached_property
     def training_time_td(self):
         """
         Calculate the time to train to this planned level from previous
@@ -125,7 +127,7 @@ class PlannedSkill(models.Model):
         :return: The time to train to this planned skill level
         :rtype: timedelta
         """
-        known = self.character.has_skill(self.skill)
+        known = self.character.has_skill(skill=self.skill)
         if known and self.level == known.level + 1:
             return known.time_to_next_level
         pri_attr = self.character.attribute_value(self.skill.primary_attribute)
@@ -138,12 +140,8 @@ class PlannedSkill(models.Model):
         ))
         return td
 
-    @property
+    @cacheable('cumulative-td-%(plan_id)d-%(skill_id)d-%(level)d-%(position)d')
     def cumulative_training_time_td(self):
-        cache_key = 'training-cumulative-td-%s' % self
-        cached = cache.get(cache_key)
-        if cached is not None:
-            return cached
         td_total = timedelta()
         prev = self
         while True:
@@ -151,7 +149,6 @@ class PlannedSkill(models.Model):
                 break
             td_total += prev.training_time_td
             prev = prev.previous_skill
-        cache.set(cache_key, td_total)
         return td_total
 
     @property
