@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Delete API Key{% endblock %}
+
+{% block content %}
+  <h2>Delete API Key</h2>
+  <p>Really delete API Key {{ object.key_id }} and all associated content?</p>
+  <form method="post" action=".">
+    {% csrf_token %}
+    <button class="btn btn-danger"
+            type="submit">Delete</button>
+  </form>
+{% endblock %}

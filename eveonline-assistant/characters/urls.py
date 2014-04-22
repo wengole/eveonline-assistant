@@ -3,7 +3,8 @@ URLs for the characters app
 """
 from django.conf.urls import patterns, url
 
-from .views import AddCharacter, ManageCharacters, ManageApiKeys, CharacterDetail, UpdateCharacter, AddApiKey
+from .views import AddCharacter, ManageCharacters, ManageApiKeys, CharacterDetail, UpdateCharacter, AddApiKey, \
+    DeleteApiKey
 
 
 urlpatterns = patterns(
@@ -38,5 +39,10 @@ urlpatterns = patterns(
         regex=r'^apis/manage/$',
         view=ManageApiKeys.as_view(),
         name='manage_apis'
+    ),
+    url(
+        regex=r'^apis/delete/(?P<pk>\d+)/$',
+        view=DeleteApiKey.as_view(),
+        name='delete_api'
     ),
 )

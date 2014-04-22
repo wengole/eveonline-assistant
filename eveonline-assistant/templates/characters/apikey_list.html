@@ -29,7 +29,7 @@
                 <td>{{ api.key_id }}</td>
                 <td>{{ api.verification_code }}</td>
                 <td>
-                  <a href="#">Delete</a>
+                  <a href="{% url 'characters:delete_api' api.pk %}">Delete</a>
                 </td>
               </tr>
             {% endfor %}

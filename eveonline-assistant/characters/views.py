@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, \
-    FormView
+    FormView, DeleteView
 
 from .forms import ApiKeyForm, CharacterForm
 from .utils import UserIsOwnerMixin
@@ -74,6 +74,11 @@ class ManageApiKeys(LoginRequiredMixin, ListView):
     def get_queryset(self):
         queryset = self.model.objects.filter(user=self.request.user)
         return queryset
+
+
+class DeleteApiKey(UserIsOwnerMixin, DeleteView):
+    model = ApiKey
+    success_url = reverse_lazy('characters:manage_apis')
 
 
 class CharacterDetail(UserIsOwnerMixin, DetailView):
