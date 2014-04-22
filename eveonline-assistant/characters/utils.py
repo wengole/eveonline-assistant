@@ -7,6 +7,7 @@ from django.db import models
 def points_per_second(primary_attribute, secondary_attribute):
     return (primary_attribute + (secondary_attribute / 2)) / 60
 
+
 def timedelta_to_str(td):
     d = datetime(1, 1, 1) + td
     if d.month - 1 > 0:
