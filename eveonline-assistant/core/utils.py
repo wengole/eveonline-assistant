@@ -36,8 +36,11 @@ def cacheable(cache_key, timeout=3600):
     def paramed_decorator(func):
         @wraps(func)
         def decorated(self, *args, **kwargs):
-            kwargs.update(self.__dict__)
-            key = hashlib.md5.digest(cache_key % kwargs)
+            format_kwargs = kwargs.copy()
+            format_kwargs.update(self.__dict__)
+            md5 = hashlib.md5()
+            md5.update(cache_key.format(**format_kwargs).encode('utf-8'))
+            key = md5.hexdigest()
             res = cache.get(key)
             if res is None:
                 res = func(self, *args, **kwargs)

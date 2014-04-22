@@ -4,7 +4,6 @@ from django.core.urlresolvers import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import Max
-from django.core.cache import cache
 from django.utils.functional import cached_property
 
 from characters.utils import timedelta_to_str
@@ -129,7 +128,7 @@ class PlannedSkill(models.Model):
         """
         known = self.character.has_skill(skill=self.skill)
         if known and self.level == known.level + 1:
-            return known.time_to_next_level
+            return known.td_to_next_level
         pri_attr = self.character.attribute_value(self.skill.primary_attribute)
         sec_attr = self.character.attribute_value(self.skill.secondary_attribute)
         td = timedelta(seconds=self.skill.time_to_level(
@@ -140,7 +139,7 @@ class PlannedSkill(models.Model):
         ))
         return td
 
-    @cacheable('cumulative-td-%(plan_id)d-%(skill_id)d-%(level)d-%(position)d')
+    @cacheable('cumulative-td-{plan_id}-{skill_id}-{level}-{position}')
     def cumulative_training_time_td(self):
         td_total = timedelta()
         prev = self
@@ -163,7 +162,7 @@ class PlannedSkill(models.Model):
         """
         Return the current time plus timedelta
         """
-        return datetime.utcnow() + self.cumulative_training_time_td
+        return datetime.utcnow() + self.cumulative_training_time_td()
 
     def __unicode__(self):
         return '%s: #%d %s L%d' % (

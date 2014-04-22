@@ -17,7 +17,7 @@ from evelink.api import API
 from evelink.char import Char
 from slugify import slugify
 
-from characters.utils import SkillRelatedModel, points_per_second, timedelta_to_str
+from characters.utils import SkillRelatedModel, points_per_second
 from core.utils import DjangoCache, GetOrNoneManager, cacheable
 from skills.models import Attribute, Group
 from skills.models import Skill
@@ -127,7 +127,7 @@ class Character(models.Model):
             )['total']
         return groups
 
-    @cacheable('%(name)s-has-skill-%(skill)s')
+    @cacheable('{name}-has-skill-{skill.id}')
     def has_skill(self, skill=None):
         if skill is None:
             return
@@ -244,7 +244,7 @@ class SkillTrained(SkillRelatedModel):
     objects = GetOrNoneManager()
 
     @cached_property
-    def time_to_next_level(self):
+    def td_to_next_level(self):
         if self.level == 5:
             return
         pri_attr = self.character.attribute_value(self.skill.primary_attribute)
@@ -252,7 +252,7 @@ class SkillTrained(SkillRelatedModel):
         td = timedelta(
             seconds=self.skill.time_to_level(self.level, self.level + 1, pri_attr, sec_attr)
         )
-        return timedelta_to_str(td)
+        return td
 
     @cached_property
     def progress(self):
