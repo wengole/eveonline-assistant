@@ -117,6 +117,7 @@ class Character(models.Model):
         ).order_by(
             'skill__group__name'
         )
+        current_skill = self.skill_in_training
         for group in groups:
             group['skills'] = self.skilltrained_set.filter(
                 skill__group__name=group['skill__group__name'])
@@ -125,6 +126,8 @@ class Character(models.Model):
             ).aggregate(
                 total=Count('skills__id')
             )['total']
+            if current_skill.skill.group.name == group['skill__group__name']:
+                group['progress'] = current_skill
         return groups
 
     @cacheable('{name}-has-skill-{skill.id}')
@@ -137,6 +140,10 @@ class Character(models.Model):
             return cached
         skl = self.skilltrained_set.get_or_none(skill=skill)
         return skl
+
+    @property
+    def skill_in_training(self):
+        return self.skillqueue_set.get(position=0)
 
     def attribute_value(self, attr):
         cache_key = '%s-%s' % (self.name, attr.name)
@@ -307,9 +314,21 @@ class SkillQueue(SkillRelatedModel):
     end_time = models.DateTimeField('End Time')
 
     @cached_property
+    def train_rate(self):
+        pri_atr_val = self.character.attribute_value(self.skill.primary_attribute)
+        sec_atr_val = self.character.attribute_value(self.skill.secondary_attribute)
+        return points_per_second(pri_atr_val, sec_atr_val)
+
+    @property
     def current_sp(self):
         if self.position != 0:
             return self.character.skilltrained_set.get(skill=self.skill).skillpoints
         seconds_left = Decimal((self.end_time - datetime.utcnow().replace(tzinfo=utc)).total_seconds())
-        train_rate = points_per_second(self.primary_attribute_value, self.secondary_attribute_value)
-        return int(self.end_sp - (seconds_left * train_rate))
+        return int(self.end_sp - (seconds_left * self.train_rate))
+
+    @property
+    def progress(self):
+        """
+        The progress to completion in %
+        """
+        return Decimal(self.current_sp) / Decimal(self.end_sp) * 100

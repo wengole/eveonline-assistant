@@ -8,8 +8,20 @@
         <div class="panel-heading">
           <h4 class="panel-title">
             {{ group.skill__group__name }} <b class="caret"></b>
-            <span class="pull-right">SP: {{ group.sp_sum|intcomma }}
-              ({{ group.trained }} / {{ group.total }})</span>
+            <span class="pull-right">
+              {% if group.progress %}
+                <span class="progress">
+                  <span class="progress-bar" role="progressbar" aria-valuenow="{{
+                      group.progress.progress|floatformat }}"
+                       aria-valuemin="0" aria-valuemax="100" style="width:
+                      {{ group.progress.progress|floatformat }}%;">
+                    {{ group.progress.progress|floatformat }}%
+                  </span>
+                </span>
+              {% endif %}
+              SP: {{ group.sp_sum|intcomma }}
+              ({{ group.trained }} / {{ group.total }})
+            </span>
           </h4>
         </div>
       </a>
