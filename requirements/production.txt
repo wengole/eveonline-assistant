@@ -2,6 +2,4 @@
 #	production that isn't in development.
 -r base.txt
 
-uWSGI==2.0.3
-django-redis==3.6.1
-hiredis==0.1.2
+
