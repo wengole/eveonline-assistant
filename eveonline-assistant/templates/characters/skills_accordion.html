@@ -1,24 +1,15 @@
 {% load humanize %}
 <div class="panel-group" id="skills-accordion">
   {% for group in groups %}
-    <div class="panel panel-default">
+    <div class="panel {% if group.progress %}panel-info{% else %}panel-default{% endif %}">
       <a data-toggle="collapse"
          data-parent="#skills-accordion"
-         href="#collapse{{ forloop.counter }}">
+         href="#collapse{{ forloop.counter }}"
+         class="{% if group.progress %}panel-info{% else %}panel-default{% endif %}">
         <div class="panel-heading">
           <h4 class="panel-title">
             {{ group.skill__group__name }} <b class="caret"></b>
             <span class="pull-right">
-              {% if group.progress %}
-                <span class="progress">
-                  <span class="progress-bar" role="progressbar" aria-valuenow="{{
-                      group.progress.progress|floatformat }}"
-                       aria-valuemin="0" aria-valuemax="100" style="width:
-                      {{ group.progress.progress|floatformat }}%;">
-                    {{ group.progress.progress|floatformat }}%
-                  </span>
-                </span>
-              {% endif %}
               SP: {{ group.sp_sum|intcomma }}
               ({{ group.trained }} / {{ group.total }})
             </span>
@@ -28,8 +19,7 @@
 
       <div id="collapse{{ forloop.counter }}"
            class="panel-collapse collapse">
-        <div class="panel-body">
-          <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover">
             <thead>
               <tr>
                 <th>Skill</th>
@@ -70,7 +60,6 @@
             {% endfor %}
             </tbody>
           </table>
-        </div>
       </div>
     </div>
   {% endfor %}
