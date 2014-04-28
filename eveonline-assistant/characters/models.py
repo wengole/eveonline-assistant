@@ -17,7 +17,7 @@ from evelink.api import API
 from evelink.char import Char
 from slugify import slugify
 
-from characters.utils import SkillRelatedModel, points_per_second
+from characters.utils import SkillRelatedModel, points_per_second, timedelta_to_str
 from core.utils import DjangoCache, GetOrNoneManager, cacheable
 from skills.models import Attribute, Group
 from skills.models import Skill
@@ -120,7 +120,10 @@ class Character(models.Model):
         current_skill = self.skill_in_training
         for group in groups:
             group['skills'] = self.skilltrained_set.filter(
-                skill__group__name=group['skill__group__name'])
+                skill__group__name=group['skill__group__name']
+            ).exclude(
+                skill=current_skill.skill
+            )
             group['total'] = Group.objects.filter(
                 name=group['skill__group__name']
             ).aggregate(
@@ -260,6 +263,10 @@ class SkillTrained(SkillRelatedModel):
             seconds=self.skill.time_to_level(self.level, self.level + 1, pri_attr, sec_attr)
         )
         return td
+
+    @cached_property
+    def time_to_next_level_as_str(self):
+        return timedelta_to_str(self.td_to_next_level)
 
     @cached_property
     def progress(self):

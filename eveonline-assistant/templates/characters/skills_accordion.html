@@ -1,7 +1,8 @@
 {% load humanize %}
 <div class="panel-group" id="skills-accordion">
   {% for group in groups %}
-    <div class="panel {% if group.progress %}panel-info{% else %}panel-default{% endif %}">
+    {% with in_progress=group.progress %}
+    <div class="panel {% if in_progress %}panel-info{% else %}panel-default{% endif %}">
       <a data-toggle="collapse"
          data-parent="#skills-accordion"
          href="#collapse{{ forloop.counter }}"
@@ -45,7 +46,7 @@
                     </div>
                   </td>
                   <td class="text-right">
-                    {{ skill_known.time_to_next_level|default:"" }}
+                    {{ skill_known.time_to_next_level_as_str|default:"" }}
                   </td>
                   <td class="text-center hidden-xs hidden-sm">
                     {{ skill_known.skillpoints|intcomma }}
@@ -58,9 +59,30 @@
                 </tr>
               {% endwith %}
             {% endfor %}
+            <tr class="info">
+              <td>{{ in_progress.skill.name }} ({{ in_progress.skill.rank }}x)</td>
+              <td class="hidden-xs hidden-sm">
+                <div class="progress">
+                  <div class="progress-bar" style="width:
+                  {{ in_progress.progress }}%;"></div>
+                </div>
+              </td>
+              <td class="text-right">
+                {{ in_progress.skill.time_to_next_level_as_str|default:"" }}
+              </td>
+              <td class="text-center hidden-xs hidden-sm">
+                {{ in_progress.current_sp|intcomma }}
+                /
+                {{ in_progress.end_sp|intcomma }}
+              </td>
+              <td class="text-center">
+                <span class="badge">{{ in_progress.level }}</span>
+              </td>
+            </tr>
             </tbody>
           </table>
       </div>
     </div>
+    {% endwith %}
   {% endfor %}
 </div>
